@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_cows">
+
+    <fragment
+        android:id="@+id/nav_cows"
+        android:name="tech.jforseth.cattledatabase.ui.cows.CowFragment"
+        android:label="@string/menu_cows"
+        tools:layout="@layout/fragment_cows" />
+
+    <fragment
+        android:id="@+id/nav_events"
+        android:name="tech.jforseth.cattledatabase.ui.events.EventFragment"
+        android:label="@string/menu_events"
+        tools:layout="@layout/fragment_events" />
+
+    <fragment
+        android:id="@+id/nav_transactions"
+        android:name="tech.jforseth.cattledatabase.ui.transactions.TransactionFragment"
+        android:label="@string/menu_transactions"
+        tools:layout="@layout/fragment_transactions" />
+</navigation>
