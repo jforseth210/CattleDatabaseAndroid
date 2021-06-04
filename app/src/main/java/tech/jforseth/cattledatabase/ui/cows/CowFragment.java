@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,17 +36,10 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
         binding.textViewSire.setText("Sex: ");
         binding.textViewDam.setText("Dam: ");
         binding.textViewSire.setText("Sire: ");
+        binding.textViewCalves.setText("Calves: ");
         binding.editTextTagNumber.setHint("Tag Number");
-        binding.addCowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lookUPCow();
-            }
-        });
-        cowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-            }
+        binding.addCowButton.setOnClickListener(view -> lookUPCow());
+        cowViewModel.getText().observe(getViewLifecycleOwner(), s -> {
         });
         return root;
     }
@@ -72,14 +64,14 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
             binding.textViewSex.setText("Sex: " + object.getString("sex"));
             binding.textViewDam.setText("Dam: " + object.getString("dam"));
             binding.textViewSire.setText("Sire: " + object.getString("sire"));
+            binding.textViewSire.setText("Sire: " + object.getString("sire"));
             JSONArray calves = object.getJSONArray("calves");
-            String calvesString = "";
+            StringBuilder calvesString = new StringBuilder();
             for (int i = 0; i < calves.length(); i++){
                 if (i > 0) {
-                    calvesString = calvesString + ", " + calves.getString(i);
-                } else {
-                    calvesString = calvesString + calves.getString(i);
+                    calvesString.append(", ");
                 }
+                    calvesString.append(calves.getString(i));
             }
             binding.textViewCalves.setText("Calves: " + calvesString);
         } catch (Exception e) {
