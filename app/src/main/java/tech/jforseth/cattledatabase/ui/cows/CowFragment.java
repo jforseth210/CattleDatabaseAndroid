@@ -1,5 +1,7 @@
 package tech.jforseth.cattledatabase.ui.cows;
 
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,13 +9,17 @@ import android.view.ViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+import tech.jforseth.cattledatabase.MainActivity;
 import tech.jforseth.cattledatabase.databinding.FragmentCowsBinding;
 
 import tech.jforseth.cattledatabase.makeHTTPRequest;
@@ -23,6 +29,7 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
     private CowViewModel cowViewModel;
     private FragmentCowsBinding binding;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         cowViewModel =
@@ -33,7 +40,7 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
         binding.addCowButton.setText("Lookup");
         binding.textViewTagNumber.setText("Tag Number: ");
         binding.textViewOwner.setText("Owner: ");
-        binding.textViewSire.setText("Sex: ");
+        binding.textViewSex.setText("Sex: ");
         binding.textViewDam.setText("Dam: ");
         binding.textViewSire.setText("Sire: ");
         binding.textViewCalves.setText("Calves: ");
@@ -43,9 +50,18 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
         });
         return root;
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void lookUPCow(){
-        makeHTTPRequest request = new makeHTTPRequest(this);
-        String url = "http://192.168.1.3:5000/api/cow/"+binding.editTextTagNumber.getText();
+        makeHTTPRequest request = new makeHTTPRequest(this, getContext());
+        SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
+        String url = "";
+        try{
+            url = preferences.getString("serverIPLAN", "") + "/api/cow/"+ URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(url);
         request.execute(url);
     }
     @Override
