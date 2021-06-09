@@ -3,14 +3,15 @@ package tech.jforseth.cattledatabase;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -18,7 +19,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import tech.jforseth.cattledatabase.databinding.ActivityMainBinding;
 
@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        binding.appBarMain.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
 
         SharedPreferences preferences = getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
 
@@ -50,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         //This is probably bad practice, but then again, so is this whole project.
         if (preferences.getString("password", "").equals("")) {
             showInputDialog(this, "Enter password", "Enter the password you use to access your CattleDB", "averysecurepassword", "password", preferences);
+
         }
         if (preferences.getString("username", "").equals("")) {
             showInputDialog(this, "Enter username", "Enter the username you use to access your CattleDB", "Your Name", "username", preferences);
