@@ -16,15 +16,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import tech.jforseth.cattledatabase.MainActivity;
+import tech.jforseth.cattledatabase.R;
+import tech.jforseth.cattledatabase.cowAddParentActivity;
 import tech.jforseth.cattledatabase.databinding.FragmentCowsBinding;
 
 import tech.jforseth.cattledatabase.makeHTTPRequest;
@@ -53,14 +57,7 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
 
         binding = FragmentCowsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        binding.addCowButton.setText("Lookup");
-        binding.textViewTagNumber.setText("Tag Number: ");
-        binding.textViewOwner.setText("Owner: ");
-        binding.textViewSex.setText("Sex: ");
-        binding.textViewDam.setText("Dam: ");
-        binding.textViewSire.setText("Sire: ");
-        binding.textViewCalves.setText("Calves: ");
-        binding.editTextTagNumber.setHint("Tag Number");
+        resetLookupText();
         binding.addCowButton.setOnClickListener(view -> lookUPCow());
         cowViewModel.getText().observe(getViewLifecycleOwner(), s -> {
         });
@@ -166,9 +163,9 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //Intent i = new Intent(getActivity(), cowAddParentActivity.class);
-                        //getActivity().startActivity(i);
-                        //getActivity().finish();
+                        Intent i = new Intent(getActivity(), cowAddParentActivity.class);
+                        getActivity().startActivity(i);
+                        getActivity().finish();
                     }
                 });
 
@@ -183,7 +180,29 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
                         Toast.makeText( getActivity(), "Alarm Added", Toast.LENGTH_SHORT).show();
                     }
                 });
-
+        mDeleteCowFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                        .setTitle("Delete Cow")
+                        .setMessage("Are you sure you want to delete "+binding.editTextTagNumber.getText().toString()+"? This action is IRREVERSIBLE")
+                        .setNegativeButton("No", (dialog1, which) -> {
+                            //Do nothing
+                        })
+                        .setPositiveButton("Yes", (dialog1, which) -> {
+                          deleteCow();
+                          AlertDialog success_dialog = new AlertDialog.Builder(getActivity())
+                                  .setTitle("Deleted")
+                                  .setMessage(binding.editTextTagNumber.getText().toString()+" has been deleted")
+                                  .setPositiveButton("Ok", null)
+                                  .create();
+                          success_dialog.show();
+                          resetLookupText();
+                        })
+                        .create();
+                dialog.show();
+            }
+        });
 
         return root;
     }
@@ -193,9 +212,41 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
         SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
         String url = "";
         try{
-            url = preferences.getString("serverIPLAN", "") + "/api/cow/"+ URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
-        } catch (Exception e){
-            e.printStackTrace();
+            url = preferences.getString("server_LAN_address", "") + "/api/cow/"+ URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+        } catch (Exception d){
+            try {
+                url = preferences.getString("server_WAN_address", "") + "/api/cow/" + URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println(url);
+        request.execute(url);
+    }
+    public void resetLookupText(){
+        binding.addCowButton.setText("Lookup");
+        binding.textViewTagNumber.setText("Tag Number: ");
+        binding.textViewOwner.setText("Owner: ");
+        binding.textViewSex.setText("Sex: ");
+        binding.textViewDam.setText("Dam: ");
+        binding.textViewSire.setText("Sire: ");
+        binding.textViewCalves.setText("Calves: ");
+        binding.editTextTagNumber.setHint("Tag Number");
+        binding.editTextTagNumber.setText("");
+    }
+    public void deleteCow(){
+        makeHTTPRequest request = new makeHTTPRequest(this, getActivity());
+        SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
+        String url = "";
+        try{
+            url = preferences.getString("server_LAN_address", "") + "/api/delete_cow/"+ URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+        } catch (Exception d){
+            try {
+                url = preferences.getString("server_WAN_address", "") + "/api/delete_cow/" + URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         System.out.println(url);

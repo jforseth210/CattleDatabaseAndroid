@@ -1,17 +1,17 @@
 package tech.jforseth.cattledatabase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -37,26 +37,28 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.appBarMain.toolbar);
 
         SharedPreferences preferences = getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
-
+        /*
+        SharedPreferences.Editor pref_editor = preferences.edit();
+        pref_editor.putBoolean("logged_in", false);
+        pref_editor.apply();
+        */
         NavigationView navigationViewEditable = findViewById(R.id.nav_view);
         View headerView = navigationViewEditable.getHeaderView(0);
         TextView navUsername = headerView.findViewById(R.id.textViewLoginUsername);
         navUsername.setText(preferences.getString("username", ""));
-        TextView navIP= headerView.findViewById(R.id.textViewLoginIP);
-        navIP.setText(preferences.getString("serverIPLAN", ""));
+        TextView navIP = headerView.findViewById(R.id.textViewLoginIP);
+        navIP.setText(preferences.getString("server_LAN_address", ""));
 
         //This is probably bad practice, but then again, so is this whole project.
-        if (preferences.getString("password", "").equals("")) {
-            showInputDialog(this, "Enter password", "Enter the password you use to access your CattleDB", "averysecurepassword", "password", preferences);
-
+        if (preferences.getString("password", "").equals("") ||
+                preferences.getString("username", "").equals("") ||
+                preferences.getString("server_LAN_address", "").equals("") ||
+                !preferences.getBoolean("logged_in", false)
+        ) {
+            Intent i = new Intent(this, LoginActivity.class);
+            this.startActivity(i);
+            this.finish();
         }
-        if (preferences.getString("username", "").equals("")) {
-            showInputDialog(this, "Enter username", "Enter the username you use to access your CattleDB", "Your Name", "username", preferences);
-        }
-        if (preferences.getString("serverIPLAN", "").equals("")) {
-            showInputDialog(this, "Enter local link", "Enter the link you use to access your CattleDB", "http://192.168.1.__:5000", "serverIPLAN", preferences);
-        }
-
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -70,13 +72,37 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
+    public void goToLoginScreen(){
+        Intent i = new Intent(this, LoginActivity.class);
+        this.startActivity(i);
+        this.finish();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_log_out:
+                SharedPreferences preferences = getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
+                SharedPreferences.Editor pref_editor = preferences.edit();
+                pref_editor.putString("username", "");
+                pref_editor.putString("password", "");
+                pref_editor.putString("server_LAN_address", "");
+                pref_editor.putString("server_WAN_address", "");
+                pref_editor.putBoolean("logged_in", false);
+                pref_editor.apply();
+                goToLoginScreen();
 
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -99,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     View headerView = navigationViewEditable.getHeaderView(0);
                     TextView navUsername = headerView.findViewById(R.id.textViewLoginUsername);
                     navUsername.setText(preferences.getString("username", ""));
-                    TextView navIP= headerView.findViewById(R.id.textViewLoginIP);
+                    TextView navIP = headerView.findViewById(R.id.textViewLoginIP);
                     navIP.setText(preferences.getString("serverIPLAN", ""));
                 })
                 .create();

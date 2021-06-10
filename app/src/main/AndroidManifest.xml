@@ -13,6 +13,14 @@
         android:theme="@style/Theme.CattleDatabase"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.CattleDatabase.NoActionBar"></activity>
+        <activity
+            android:name=".cowAddParentActivity"
+            android:label="@string/title_activity_cow_add_parent"
+            android:theme="@style/Theme.CattleDatabase.NoActionBar" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
