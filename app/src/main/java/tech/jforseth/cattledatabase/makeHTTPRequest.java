@@ -67,7 +67,7 @@ public class makeHTTPRequest extends AsyncTask<String, Void, String> {
             return "No URLs provided";
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error!";
+            return "Error: "+e.toString();
         }
     }
 

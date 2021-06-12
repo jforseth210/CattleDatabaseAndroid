@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 
 import tech.jforseth.cattledatabase.MainActivity;
 import tech.jforseth.cattledatabase.R;
+import tech.jforseth.cattledatabase.cowAddCowActivity;
 import tech.jforseth.cattledatabase.cowAddParentActivity;
 import tech.jforseth.cattledatabase.databinding.FragmentCowsBinding;
 
@@ -58,7 +59,7 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
         binding = FragmentCowsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         resetLookupText();
-        binding.addCowButton.setOnClickListener(view -> lookUPCow());
+        binding.addCowButton.setOnClickListener(view -> lookupCow());
         cowViewModel.getText().observe(getViewLifecycleOwner(), s -> {
         });
 
@@ -165,7 +166,7 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
                     public void onClick(View view) {
                         Intent i = new Intent(getActivity(), cowAddParentActivity.class);
                         getActivity().startActivity(i);
-                        getActivity().finish();
+                        //getActivity().finish();
                     }
                 });
 
@@ -177,7 +178,9 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText( getActivity(), "Alarm Added", Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(getActivity(), cowAddCowActivity.class);
+                        getActivity().startActivity(i);
+                        //getActivity().finish();
                     }
                 });
         mDeleteCowFab.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +188,7 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
             public void onClick(View v) {
                 AlertDialog dialog = new AlertDialog.Builder(getActivity())
                         .setTitle("Delete Cow")
-                        .setMessage("Are you sure you want to delete "+binding.editTextTagNumber.getText().toString()+"? This action is IRREVERSIBLE")
+                        .setMessage("Are you sure you want to delete "+binding.editTextTagNumber.getText().toString().trim()+"? This action is IRREVERSIBLE")
                         .setNegativeButton("No", (dialog1, which) -> {
                             //Do nothing
                         })
@@ -193,7 +196,7 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
                           deleteCow();
                           AlertDialog success_dialog = new AlertDialog.Builder(getActivity())
                                   .setTitle("Deleted")
-                                  .setMessage(binding.editTextTagNumber.getText().toString()+" has been deleted")
+                                  .setMessage(binding.editTextTagNumber.getText().toString().trim()+" has been deleted")
                                   .setPositiveButton("Ok", null)
                                   .create();
                           success_dialog.show();
@@ -207,15 +210,15 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
         return root;
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void lookUPCow(){
+    public void lookupCow(){
         makeHTTPRequest request = new makeHTTPRequest(this, getActivity());
         SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
         String url = "";
         try{
-            url = preferences.getString("server_LAN_address", "") + "/api/cow/"+ URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+            url = preferences.getString("server_LAN_address", "") + "/api/cow/"+ URLEncoder.encode(binding.editTextTagNumber.getText().toString().trim(), StandardCharsets.UTF_8.toString());
         } catch (Exception d){
             try {
-                url = preferences.getString("server_WAN_address", "") + "/api/cow/" + URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+                url = preferences.getString("server_WAN_address", "") + "/api/cow/" + URLEncoder.encode(binding.editTextTagNumber.getText().toString().trim(), StandardCharsets.UTF_8.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -240,10 +243,10 @@ public class CowFragment extends Fragment implements makeHTTPRequest.AsyncRespon
         SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
         String url = "";
         try{
-            url = preferences.getString("server_LAN_address", "") + "/api/delete_cow/"+ URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+            url = preferences.getString("server_LAN_address", "") + "/api/delete_cow/"+ URLEncoder.encode(binding.editTextTagNumber.getText().toString().trim(), StandardCharsets.UTF_8.toString());
         } catch (Exception d){
             try {
-                url = preferences.getString("server_WAN_address", "") + "/api/delete_cow/" + URLEncoder.encode(binding.editTextTagNumber.getText().toString(), StandardCharsets.UTF_8.toString());
+                url = preferences.getString("server_WAN_address", "") + "/api/delete_cow/" + URLEncoder.encode(binding.editTextTagNumber.getText().toString().trim(), StandardCharsets.UTF_8.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }

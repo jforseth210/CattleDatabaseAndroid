@@ -39,6 +39,7 @@ public class LoginAccountInfoFragment extends Fragment implements makeHTTPReques
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
         binding.editTextUsername.setText(preferences.getString("username",""));
+        binding.editTextPassword.setText(preferences.getString("password",""));
         binding.buttonPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

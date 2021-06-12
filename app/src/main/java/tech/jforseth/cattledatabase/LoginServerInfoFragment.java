@@ -1,7 +1,16 @@
 package tech.jforseth.cattledatabase;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
+import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +19,21 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+
 import tech.jforseth.cattledatabase.databinding.FragmentLoginServerInfoBinding;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class LoginServerInfoFragment extends Fragment {
+public class LoginServerInfoFragment extends Fragment implements NetworkSniffTask.AsyncResponse {
 
     private FragmentLoginServerInfoBinding binding;
 
@@ -66,12 +85,33 @@ public class LoginServerInfoFragment extends Fragment {
                 }
             }
         });
+        System.out.println("hmm");
+        scan();
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+    public void scan(){
+        NetworkSniffTask task = new NetworkSniffTask(this, getActivity());
+        task.execute();
+    }
+    @Override
+    public void processFinish(JSONObject output) {
+        System.out.println("Saving preferences");
+        SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
+        SharedPreferences.Editor pref_editor = preferences.edit();
+        try {
+            pref_editor.putString("server_LAN_address", "http://" + output.getString("LAN_address") + ":5000");
+            pref_editor.putString("server_WAN_address", "http://" + output.getString("WAN_address") + ":5000");
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        pref_editor.apply();
+        System.out.println("Going to next page:");
+        NavHostFragment.findNavController(LoginServerInfoFragment.this)
+                .navigate(R.id.action_First2Fragment_to_Second2Fragment);
 
+    }
 }
