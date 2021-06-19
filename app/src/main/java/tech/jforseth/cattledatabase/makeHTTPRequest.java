@@ -51,6 +51,7 @@ public class makeHTTPRequest extends AsyncTask<String, Void, String> {
                 con.setRequestProperty("Authorization", "Basic " + encoded_auth);
                 con.setInstanceFollowRedirects(true);
                 con.setRequestMethod("POST");
+                System.out.println("HTTP Code:"+con.getResponseCode());
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(con.getInputStream()));
                 String inputLine;
