@@ -80,10 +80,10 @@ public class cowAddCowActivity extends AppCompatActivity implements  makeHTTPReq
         SharedPreferences preferences = getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
         String url = "";
         try{
-            url = preferences.getString("server_LAN_address", "") + "/api/add_cow/"+newCowJSON;
+            url = preferences.getString("server_LAN_address", "") + "/api/add_cow/"+URLEncoder.encode(newCowJSON, StandardCharsets.UTF_8.toString());
         } catch (Exception d){
             try {
-                url = preferences.getString("server_WAN_address", "") + "/api/add_cow/"+newCowJSON;
+                url = preferences.getString("server_WAN_address", "") + "/api/add_cow/"+URLEncoder.encode(newCowJSON, StandardCharsets.UTF_8.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
