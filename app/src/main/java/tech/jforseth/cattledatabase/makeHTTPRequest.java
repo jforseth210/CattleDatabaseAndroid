@@ -2,77 +2,115 @@ package tech.jforseth.cattledatabase;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.text.Html;
 
 import androidx.annotation.RequiresApi;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
-public class makeHTTPRequest extends AsyncTask<String, Void, String> {
-    public AsyncResponse delegate = null;
-    private Context context = null;
-    public makeHTTPRequest(AsyncResponse delegate, Context context) {
-        this.delegate = delegate;
+public class makeHTTPRequest {
+    Response.Listener<org.json.JSONObject> listener;
+    Response.ErrorListener errorListener;
+    RequestQueue requestQueue;
+    private String endpoint;
+    private Context context;
+    private String mode;
+    private String url;
+    private String data;
+
+    public makeHTTPRequest(String endpoint, String data,
+                           Response.Listener<org.json.JSONObject> listener,
+                           Response.ErrorListener errorListener,
+                           Context context) {
         this.context = context;
+        this.endpoint = endpoint;
+        this.data = data;
+        this.listener = listener;
+        this.errorListener = errorListener;
+        this.mode = "LAN";
+        requestQueue = Volley.newRequestQueue(this.context);
+        generateUrl();
+        sendRequest();
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(String output) {
-        delegate.processFinish(output);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    protected String doInBackground(String... urls_as_strings) {
+    public void generateUrl() {
+        SharedPreferences preferences = this.context.getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
         try {
-            for (String url_as_string : urls_as_strings) {
-                SharedPreferences preferences = this.context.getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
-                String plain_auth = preferences.getString("username", "") + ":" + preferences.getString("password", "");
-                String encoded_auth = Base64.getEncoder().encodeToString(plain_auth.getBytes());
-                System.out.println(plain_auth);
-                System.out.println(encoded_auth);
-                URL url = new URL(url_as_string);
-
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestProperty("Content-Type", "application/json");
-                con.setRequestProperty("Authorization", "Basic " + encoded_auth);
-                con.setInstanceFollowRedirects(true);
-                con.setRequestMethod("POST");
-                System.out.println("HTTP Code:"+con.getResponseCode());
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer content = new StringBuffer();
-                while ((inputLine = in.readLine()) != null) {
-                    content.append(inputLine);
-                }
-                in.close();
-                con.disconnect();
-                System.out.println("Response:");
-                System.out.println(content.toString());
-                return content.toString();
-            }
-            return "No URLs provided";
-        } catch (Exception e) {
+            this.url = preferences.getString("server_" + this.mode + "_address", "")
+                    + "/api/"
+                    + this.endpoint
+                    + "/"
+                    + URLEncoder.encode(
+                    this.data,
+                    StandardCharsets.UTF_8.toString()
+            );
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return "Error: "+e.toString();
+            this.url = "";
         }
     }
 
-    public interface AsyncResponse {
-        void processFinish(String output);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String generateAuthEncoding() {
+        SharedPreferences preferences = this.context.getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
+        String plain_auth = preferences.getString("username", "") + ":" + preferences.getString("password", "");
+        String encoded_auth = Base64.getEncoder().encodeToString(plain_auth.getBytes());
+        System.out.println(plain_auth);
+        System.out.println(encoded_auth);
+        return encoded_auth;
+    }
+
+    public String getMode() {
+        return this.mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public Response.ErrorListener getErrorListener() {
+        return errorListener;
+    }
+
+    private void sendRequest() {
+        JsonObjectRequest
+                jsonObjectRequest
+                = new JsonObjectRequest(
+                Request.Method.POST,
+                this.url,
+                null,
+                listener,
+                error -> {
+                    if (getMode().equals("LAN")) {
+                        setMode("WAN");
+                        generateUrl();
+                        sendRequest();
+                    }
+                    Response.ErrorListener errorListener = getErrorListener();
+                    errorListener.onErrorResponse(error);
+                }) {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Basic " + generateAuthEncoding());
+                params.put("content-type", "application/json");
+                return params;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
     }
 }
