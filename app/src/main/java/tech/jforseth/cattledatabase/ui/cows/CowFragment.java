@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -198,7 +199,45 @@ public class CowFragment extends Fragment{
                     .create();
             dialog.show();
         });
+        mChangeTagNumberFab.setOnClickListener(v -> {
+            final EditText input = new EditText(requireActivity());
+            AlertDialog dialog = new AlertDialog.Builder(requireActivity())
+                    .setTitle("Change Tag Number")
+                    .setView(input)
+                    .setMessage("Enter a new tag number for " + binding.editTextTagNumber.getText().toString().trim() + ":")
+                    .setNegativeButton("Cancel", (dialog1, which) -> {
+                        //Do nothing
+                    })
+                    .setPositiveButton("Change", (dialog1, which) -> {
+                        String new_tag = input.getText().toString().trim();
+                        String old_tag = binding.editTextTagNumber.getText().toString().trim();
+                        Map newTagDict = new HashMap();
+                        newTagDict.put("old_tag", old_tag);
+                        newTagDict.put("new_tag", new_tag);
+                        JSONObject newTagJSON = new JSONObject(newTagDict);
 
+                        new makeHTTPRequest(
+                                "change_tag",
+                                newTagJSON.toString(),
+                                response -> {
+                                    AlertDialog success_dialog = new AlertDialog.Builder(requireActivity())
+                                            .setTitle("Tag Number Changed")
+                                            .setMessage(binding.editTextTagNumber.getText().toString().trim() + " is now " + new_tag)
+                                            .setPositiveButton("Ok", null)
+                                            .create();
+                                    success_dialog.show();
+                                    resetLookupText();
+                                },
+                                error -> {
+                                    error.printStackTrace();
+                                },
+                                requireActivity()
+                        );
+                    })
+                    .create();
+            dialog.show();
+
+        });
 
         requestQueue = Volley.newRequestQueue(requireActivity());
         return root;
