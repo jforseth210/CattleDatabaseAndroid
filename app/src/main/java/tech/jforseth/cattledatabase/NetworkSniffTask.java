@@ -9,13 +9,10 @@ import android.os.AsyncTask;
 import android.text.format.Formatter;
 import android.util.Log;
 
-import androidx.navigation.fragment.NavHostFragment;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
@@ -26,6 +23,7 @@ public class NetworkSniffTask extends AsyncTask<Void, Void, JSONObject> {
 
     public AsyncResponse delegate = null;
     private Context context = null;
+
     public NetworkSniffTask(AsyncResponse delegate, Context context) {
         this.delegate = delegate;
         this.context = context;

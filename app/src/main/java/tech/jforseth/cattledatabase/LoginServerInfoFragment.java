@@ -1,16 +1,7 @@
 package tech.jforseth.cattledatabase;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
-import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +12,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URL;
 
 import tech.jforseth.cattledatabase.databinding.FragmentLoginServerInfoBinding;
 
@@ -56,8 +40,8 @@ public class LoginServerInfoFragment extends Fragment implements NetworkSniffTas
         binding.textViewWANAddressHelperText.setVisibility(View.GONE);
 
         SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
-        binding.editTextLANAddress.setText(preferences.getString("server_LAN_address",""));
-        binding.editTextWANAddress.setText(preferences.getString("server_WAN_address",""));
+        binding.editTextLANAddress.setText(preferences.getString("server_LAN_address", ""));
+        binding.editTextWANAddress.setText(preferences.getString("server_WAN_address", ""));
 
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +58,7 @@ public class LoginServerInfoFragment extends Fragment implements NetworkSniffTas
         binding.WANModeCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (binding.WANModeCheckBox.isChecked()){
+                if (binding.WANModeCheckBox.isChecked()) {
                     binding.textViewWANAddressHeader.setVisibility(View.VISIBLE);
                     binding.editTextWANAddress.setVisibility(View.VISIBLE);
                     binding.textViewWANAddressHelperText.setVisibility(View.VISIBLE);
@@ -88,15 +72,18 @@ public class LoginServerInfoFragment extends Fragment implements NetworkSniffTas
         System.out.println("hmm");
         scan();
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-    public void scan(){
+
+    public void scan() {
         NetworkSniffTask task = new NetworkSniffTask(this, getActivity());
         task.execute();
     }
+
     @Override
     public void processFinish(JSONObject output) {
         System.out.println("Saving preferences");
@@ -105,7 +92,7 @@ public class LoginServerInfoFragment extends Fragment implements NetworkSniffTas
         try {
             pref_editor.putString("server_LAN_address", "http://" + output.getString("LAN_address") + ":5000");
             pref_editor.putString("server_WAN_address", "http://" + output.getString("WAN_address") + ":5000");
-        } catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         pref_editor.apply();

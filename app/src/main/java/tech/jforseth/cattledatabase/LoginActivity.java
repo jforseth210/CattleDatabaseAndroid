@@ -3,22 +3,15 @@ package tech.jforseth.cattledatabase;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import org.json.JSONObject;
-
 import tech.jforseth.cattledatabase.databinding.ActivityLoginBinding;
 
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityLoginBinding binding;
