@@ -37,7 +37,6 @@ import tech.jforseth.cattledatabase.cowAddCowActivity;
 import tech.jforseth.cattledatabase.cowAddParentActivity;
 import tech.jforseth.cattledatabase.databinding.FragmentCowsBinding;
 import tech.jforseth.cattledatabase.makeHTTPRequest;
-import tech.jforseth.cattledatabase.makeHTTPRequestOLD;
 
 public class CowFragment extends Fragment{
 
