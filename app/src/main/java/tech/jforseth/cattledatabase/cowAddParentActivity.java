@@ -14,12 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class cowAddParentActivity extends AppCompatActivity implements makeHTTPRequestOLD.AsyncResponse {
+public class cowAddParentActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,44 +60,35 @@ public class cowAddParentActivity extends AppCompatActivity implements makeHTTPR
     }
 
     private void addParent(String newParentJSON) {
-        makeHTTPRequestOLD request = new makeHTTPRequestOLD(this, this);
-        SharedPreferences preferences = getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
-        String url = "";
-        try {
-            url = preferences.getString("server_LAN_address", "") + "/api/add_parent/" + URLEncoder.encode(newParentJSON, StandardCharsets.UTF_8.toString());
-        } catch (Exception d) {
-            try {
-                url = preferences.getString("server_WAN_address", "") + "/api/add_parent/" + URLEncoder.encode(newParentJSON, StandardCharsets.UTF_8.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        request.execute(url);
+        new makeHTTPRequest(
+                "add_parent",
+                newParentJSON,
+                response -> {
+
+                },
+                error -> {
+                    error.printStackTrace();
+                },
+                this
+        );
     }
 
     private void get_possible_parents(String type) {
-        makeHTTPRequestOLD request = new makeHTTPRequestOLD(this, this);
-        SharedPreferences preferences = getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
-        String url = "";
-        try {
-            url = preferences.getString("server_LAN_address", "") + "/api/get_possible_parents/" + type;
-        } catch (Exception d) {
-            try {
-                url = preferences.getString("server_WAN_address", "") + "/api/get_possible_parents/" + type;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println(url);
-        request.execute(url);
+        new makeHTTPRequest(
+                "get_possible_parents",
+                type,
+                response -> {
+                  updateSpinners(response);
+                },
+                error -> {
+                    error.printStackTrace();
+                },
+                this
+        );
     }
 
-    @Override
-    public void processFinish(String output) {
+    public void updateSpinners(JSONObject object) {
         try {
-            System.out.println(output);
-            JSONObject object = new JSONObject(output);
             String parentType = object.getString("parent_type");
             JSONArray parents_json = object.getJSONArray("parents");
             String[] parents = new String[parents_json.length() + 1];
@@ -119,4 +108,4 @@ public class cowAddParentActivity extends AppCompatActivity implements makeHTTPR
             e.printStackTrace();
         }
     }
-}
+    }

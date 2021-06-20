@@ -17,7 +17,7 @@ import tech.jforseth.cattledatabase.databinding.FragmentLoginAccountInfoBinding;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class LoginAccountInfoFragment extends Fragment implements makeHTTPRequestOLD.AsyncResponse {
+public class LoginAccountInfoFragment extends Fragment {
 
     private FragmentLoginAccountInfoBinding binding;
 
@@ -63,42 +63,31 @@ public class LoginAccountInfoFragment extends Fragment implements makeHTTPReques
     }
 
     public void testCredentials() {
-        makeHTTPRequestOLD request = new makeHTTPRequestOLD(this, getActivity());
-        SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
-        String url = "";
-        try {
-            url = preferences.getString("server_LAN_address", "") + "/api/test_credentials";
-        } catch (Exception d) {
-            try {
-                url = preferences.getString("server_WAN_address", "") + "/api/test_credentials";
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println(url);
-        request.execute(url);
+        new makeHTTPRequest(
+                "test_credentials",
+                "",
+                response -> {
+                    SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
+                    SharedPreferences.Editor pref_editor = preferences.edit();
+                    pref_editor.putBoolean("logged_in", true);
+                    pref_editor.apply();
+                    Intent i = new Intent(getActivity(), MainActivity.class);
+                    getActivity().startActivity(i);
+                    getActivity().finish();
+                },
+                error -> {
+                    Snackbar.make(getView(), "Unable to login. Double check information, host computer", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    error.printStackTrace();
+                },
+                requireActivity()
+        );
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void processFinish(String output) {
-        if (output.equals("True")) {
-            SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
-            SharedPreferences.Editor pref_editor = preferences.edit();
-            pref_editor.putBoolean("logged_in", true);
-            pref_editor.apply();
-            Intent i = new Intent(getActivity(), MainActivity.class);
-            getActivity().startActivity(i);
-            getActivity().finish();
-        } else {
-            Snackbar.make(getView(), "Unable to login. Double check information, host computer", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
     }
 
 }
