@@ -13,14 +13,11 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import tech.jforseth.cattledatabase.databinding.FragmentLoginAccountInfoBinding;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class LoginAccountInfoFragment extends Fragment implements makeHTTPRequest.AsyncResponse {
+public class LoginAccountInfoFragment extends Fragment implements makeHTTPRequestOLD.AsyncResponse {
 
     private FragmentLoginAccountInfoBinding binding;
 
@@ -38,8 +35,8 @@ public class LoginAccountInfoFragment extends Fragment implements makeHTTPReques
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
-        binding.editTextUsername.setText(preferences.getString("username",""));
-        binding.editTextPassword.setText(preferences.getString("password",""));
+        binding.editTextUsername.setText(preferences.getString("username", ""));
+        binding.editTextPassword.setText(preferences.getString("password", ""));
         binding.buttonPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,30 +61,33 @@ public class LoginAccountInfoFragment extends Fragment implements makeHTTPReques
             }
         });
     }
-    public void testCredentials(){
-        makeHTTPRequest request = new makeHTTPRequest(this, getActivity());
+
+    public void testCredentials() {
+        makeHTTPRequestOLD request = new makeHTTPRequestOLD(this, getActivity());
         SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
         String url = "";
-        try{
+        try {
             url = preferences.getString("server_LAN_address", "") + "/api/test_credentials";
-        } catch (Exception d){
+        } catch (Exception d) {
             try {
                 url = preferences.getString("server_WAN_address", "") + "/api/test_credentials";
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            }
+        }
         System.out.println(url);
         request.execute(url);
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
     @Override
     public void processFinish(String output) {
-        if (output.equals("True")){
+        if (output.equals("True")) {
             SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
             SharedPreferences.Editor pref_editor = preferences.edit();
             pref_editor.putBoolean("logged_in", true);
@@ -95,7 +95,7 @@ public class LoginAccountInfoFragment extends Fragment implements makeHTTPReques
             Intent i = new Intent(getActivity(), MainActivity.class);
             getActivity().startActivity(i);
             getActivity().finish();
-        } else{
+        } else {
             Snackbar.make(getView(), "Unable to login. Double check information, host computer", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
