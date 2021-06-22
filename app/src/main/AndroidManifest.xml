@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CattleDatabase"
         android:usesCleartextTraffic="true">
-        <activity android:name=".cowAddParentActivity"></activity>
+        <activity android:name=".cowTransferOwnershipActivity"></activity>
+        <activity android:name=".cowAddParentActivity" />
         <activity android:name=".cowAddCowActivity" />
         <activity
             android:name=".LoginActivity"

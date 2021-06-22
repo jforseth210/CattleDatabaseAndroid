@@ -36,6 +36,7 @@ import java.util.Map;
 import tech.jforseth.cattledatabase.MainActivity;
 import tech.jforseth.cattledatabase.cowAddCowActivity;
 import tech.jforseth.cattledatabase.cowAddParentActivity;
+import tech.jforseth.cattledatabase.cowTransferOwnershipActivity;
 import tech.jforseth.cattledatabase.databinding.FragmentCowsBinding;
 import tech.jforseth.cattledatabase.makeHTTPRequest;
 
@@ -178,6 +179,12 @@ public class CowFragment extends Fragment{
                     Intent i = new Intent(requireActivity(), cowAddCowActivity.class);
                     requireActivity().startActivity(i);
                     //getActivity().finish();
+                });
+        mTransferOwnershipFab.setOnClickListener(
+                view -> {
+                    Intent i = new Intent(getActivity(), cowTransferOwnershipActivity.class);
+                    i.putExtra("tagNumber", binding.editTextTagNumber.getText().toString().trim());
+                    requireActivity().startActivity(i);
                 });
         mDeleteCowFab.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(requireActivity())
