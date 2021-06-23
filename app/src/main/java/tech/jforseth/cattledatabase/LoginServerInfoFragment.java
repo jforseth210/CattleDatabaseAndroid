@@ -17,7 +17,7 @@ import tech.jforseth.cattledatabase.databinding.FragmentLoginServerInfoBinding;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class LoginServerInfoFragment extends Fragment implements NetworkSniffTask.AsyncResponse {
+public class LoginServerInfoFragment extends Fragment {
 
     private FragmentLoginServerInfoBinding binding;
 
@@ -69,7 +69,6 @@ public class LoginServerInfoFragment extends Fragment implements NetworkSniffTas
                 }
             }
         });
-        System.out.println("hmm");
         scan();
     }
 
@@ -80,25 +79,7 @@ public class LoginServerInfoFragment extends Fragment implements NetworkSniffTas
     }
 
     public void scan() {
-        NetworkSniffTask task = new NetworkSniffTask(this, getActivity());
+        NetworkSniffTask task = new NetworkSniffTask(LoginServerInfoFragment.this, getActivity());
         task.execute();
-    }
-
-    @Override
-    public void processFinish(JSONObject output) {
-        System.out.println("Saving preferences");
-        SharedPreferences preferences = getActivity().getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
-        SharedPreferences.Editor pref_editor = preferences.edit();
-        try {
-            pref_editor.putString("server_LAN_address", "http://" + output.getString("LAN_address") + ":5000");
-            pref_editor.putString("server_WAN_address", "http://" + output.getString("WAN_address") + ":5000");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        pref_editor.apply();
-        System.out.println("Going to next page:");
-        NavHostFragment.findNavController(LoginServerInfoFragment.this)
-                .navigate(R.id.action_First2Fragment_to_Second2Fragment);
-
     }
 }

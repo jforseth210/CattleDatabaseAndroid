@@ -10,6 +10,8 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -111,8 +113,6 @@ public class cowAddCowActivity extends AppCompatActivity{
                 e.printStackTrace();
             }
         }
-
-        System.out.println(url);
         request.execute(url);
     */
         new makeHTTPRequest(

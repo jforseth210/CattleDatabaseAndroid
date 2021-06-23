@@ -3,6 +3,7 @@ package tech.jforseth.cattledatabase;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import static android.content.Context.MODE_PRIVATE;
 public class LoginAccountInfoFragment extends Fragment {
 
     private FragmentLoginAccountInfoBinding binding;
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -76,8 +76,10 @@ public class LoginAccountInfoFragment extends Fragment {
                     getActivity().finish();
                 },
                 error -> {
+                    /*
                     Snackbar.make(getView(), "Unable to login. Double check information, host computer", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                            .setAction("Action", null).show()
+                     */
                     error.printStackTrace();
                 },
                 requireActivity()

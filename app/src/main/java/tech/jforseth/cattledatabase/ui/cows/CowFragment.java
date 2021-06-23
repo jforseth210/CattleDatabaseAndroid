@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -247,6 +249,45 @@ public class CowFragment extends Fragment{
         });
 
         requestQueue = Volley.newRequestQueue(requireActivity());
+        new makeHTTPRequest(
+                "get_cow_list",
+                "",
+                response -> {
+                    JSONArray cows = new JSONArray();
+                    try {
+                         cows = response.getJSONArray("cows");
+                    } catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                        for (int i = 0; i < cows.length(); i++) {
+                            TextView ntext = new TextView(requireActivity());
+                            binding.cowList.addView(ntext);
+
+                            try {
+                                ntext.setText(cows.getString(i));
+                            } catch (JSONException e){
+                                e.printStackTrace();
+                            }
+
+                            ntext.setTextSize(20);
+                            ntext.setPadding(0,25,0,0);
+                            ntext.setOnClickListener(view -> {
+                                TextView textView = (TextView)view;
+                                binding.editTextTagNumber.setText(((TextView) view).getText());
+                                lookupCow();
+                            });
+                        }
+
+                },
+                error -> {
+                    /*
+                    Snackbar.make(getView(), "Error loading cows: " + error.getMessage().substring(error.getMessage().indexOf(":") + 2), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).setDuration(5000).show();
+                */
+                },
+                requireActivity()
+        );
+
         return root;
     }
 
@@ -266,9 +307,7 @@ public class CowFragment extends Fragment{
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.getCause());
-                        System.out.println(error.getClass());
-                        error.printStackTrace();
+
                     }
                 },
                 getActivity()
@@ -315,8 +354,6 @@ public class CowFragment extends Fragment{
                 binding.editTextTagNumber.getText().toString().trim(),
                 response -> resetLookupText(),
                 error -> {
-                    System.out.println("Error class:" + error.getClass());
-                    //error.printStackTrace();
                 },
                 getActivity()
         );

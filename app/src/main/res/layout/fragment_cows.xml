@@ -99,10 +99,11 @@
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_baseline_edit_24"
+        android:srcCompat="@drawable/ic_baseline_edit_24"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="16dp" />
 
     <!--Floating action button for add alarm-->
     <!--Make sure that you are constraining this
@@ -274,4 +275,21 @@
         app:layout_constraintBottom_toBottomOf="@+id/delete_cow_fab"
         app:layout_constraintEnd_toStartOf="@+id/delete_cow_fab"
         app:layout_constraintTop_toTopOf="@+id/delete_cow_fab" />
+
+    <ScrollView
+        android:id="@+id/cowListScrollview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cowLayout"
+        app:layout_constraintStart_toStartOf="@+id/cowLayout"
+        app:layout_constraintTop_toBottomOf="@+id/cowLayout">
+
+        <LinearLayout
+            android:id="@+id/cowList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

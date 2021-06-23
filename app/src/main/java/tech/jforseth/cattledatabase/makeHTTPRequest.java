@@ -3,13 +3,19 @@ package tech.jforseth.cattledatabase;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -29,7 +35,7 @@ public class makeHTTPRequest {
     private String mode;
     private String url;
     private String data;
-
+    private int failures;
     public makeHTTPRequest(String endpoint, String data,
                            Response.Listener<org.json.JSONObject> listener,
                            Response.ErrorListener errorListener,
@@ -39,9 +45,28 @@ public class makeHTTPRequest {
         this.data = data;
         this.listener = listener;
         this.errorListener = errorListener;
+        this.failures = 0;
+        Cache cache = new DiskBasedCache(this.context.getCacheDir(), 1024 * 1024);
+        Network network = new BasicNetwork(new HurlStack());
+        requestQueue = new RequestQueue(cache, network);
+        requestQueue.start();
         this.mode = "LAN";
-        requestQueue = Volley.newRequestQueue(this.context);
         generateUrl();
+        sendRequest();
+        this.mode = "WAN";
+        generateUrl();
+        sendRequest();
+    }
+    public makeHTTPRequest(String url, Response.Listener<org.json.JSONObject> listener,
+                           Response.ErrorListener errorListener, Context context){
+        this.url = url;
+        this.context = context;
+        this.listener = listener;
+        this.errorListener = errorListener;
+        Cache cache = new DiskBasedCache(this.context.getCacheDir(), 1024 * 1024);
+        Network network = new BasicNetwork(new HurlStack());
+        requestQueue = new RequestQueue(cache, network);
+        requestQueue.start();
         sendRequest();
     }
 
@@ -67,8 +92,6 @@ public class makeHTTPRequest {
         SharedPreferences preferences = this.context.getSharedPreferences("tech.jforseth.CattleDatabase", MainActivity.MODE_PRIVATE);
         String plain_auth = preferences.getString("username", "") + ":" + preferences.getString("password", "");
         String encoded_auth = Base64.getEncoder().encodeToString(plain_auth.getBytes());
-        System.out.println(plain_auth);
-        System.out.println(encoded_auth);
         return encoded_auth;
     }
 
@@ -78,6 +101,13 @@ public class makeHTTPRequest {
 
     public void setMode(String mode) {
         this.mode = mode;
+    }
+
+    public int getFailures(){
+        return this.failures;
+    }
+    public void incrementFailures(){
+        this.failures++;
     }
 
     public Response.ErrorListener getErrorListener() {
@@ -93,10 +123,22 @@ public class makeHTTPRequest {
                 null,
                 listener,
                 error -> {
-                    if (getMode().equals("LAN")) {
-                        setMode("WAN");
-                        generateUrl();
-                        sendRequest();
+                    // Only display a toast if both requests fail:
+                    if (getFailures() >= 1) {
+                        try {
+                            Toast.makeText(this.context, "Error: " + error.getMessage().substring(error.getMessage().indexOf(":") + 2), Toast.LENGTH_SHORT).show();
+                        } catch (NullPointerException e){
+                            if (error.getClass().getName().equals("com.android.volley.AuthFailureError"))
+                                Toast.makeText(this.context, "Error: Authentication Failed", Toast.LENGTH_SHORT).show();
+                            else if (error.getClass().getName().equals("com.android.volley.TimeoutError"))
+                                Toast.makeText(this.context, "Error: Connection timed out", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(this.context, "Error: Unknown error", Toast.LENGTH_SHORT).show();
+                            System.out.println(error.getClass().getName());
+                            error.printStackTrace();
+                        }
+                    } else {
+                        incrementFailures();
                     }
                     Response.ErrorListener errorListener = getErrorListener();
                     errorListener.onErrorResponse(error);
