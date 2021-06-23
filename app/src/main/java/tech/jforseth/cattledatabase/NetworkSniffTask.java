@@ -54,7 +54,7 @@ public class NetworkSniffTask extends AsyncTask<Void, String, JSONObject> {
     @Override
     protected JSONObject doInBackground(Void... voids) {
         Log.d(TAG, "Let's sniff the network");
-
+        setSuccess(false);
         try {
             Context context = this.context;
 

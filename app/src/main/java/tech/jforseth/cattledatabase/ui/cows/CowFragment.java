@@ -2,6 +2,7 @@ package tech.jforseth.cattledatabase.ui.cows;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import tech.jforseth.cattledatabase.MainActivity;
+import tech.jforseth.cattledatabase.R;
 import tech.jforseth.cattledatabase.cowAddCowActivity;
 import tech.jforseth.cattledatabase.cowAddParentActivity;
 import tech.jforseth.cattledatabase.cowTransferOwnershipActivity;
@@ -264,16 +266,18 @@ public class CowFragment extends Fragment{
                             binding.cowList.addView(ntext);
 
                             try {
-                                ntext.setText(cows.getString(i));
+                                ntext.setText("• " + cows.getString(i));
+                                ntext.setHint(cows.getString(i));
                             } catch (JSONException e){
                                 e.printStackTrace();
                             }
 
                             ntext.setTextSize(20);
                             ntext.setPadding(0,25,0,0);
+                            ntext.setPaintFlags(ntext.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
                             ntext.setOnClickListener(view -> {
                                 TextView textView = (TextView)view;
-                                binding.editTextTagNumber.setText(((TextView) view).getText());
+                                binding.editTextTagNumber.setText(((TextView) view).getHint());
                                 lookupCow();
                             });
                         }
