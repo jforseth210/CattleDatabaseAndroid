@@ -59,6 +59,7 @@ public class CowFragment extends Fragment{
     // to check whether sub FAB buttons are visible or not.
     Boolean isAllFabsVisible;
     RequestQueue requestQueue;
+    String currentCowTagNumber;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -68,7 +69,6 @@ public class CowFragment extends Fragment{
 
         View root = binding.getRoot();
         resetLookupText();
-        binding.addCowButton.setOnClickListener(view -> lookupCow());
         cowViewModel.getText().observe(getViewLifecycleOwner(), s -> {
         });
 
@@ -169,7 +169,7 @@ public class CowFragment extends Fragment{
         mAddParentFab.setOnClickListener(
                 view -> {
                     Intent i = new Intent(getActivity(), cowAddParentActivity.class);
-                    i.putExtra("tagNumber", binding.editTextTagNumber.getText().toString().trim());
+                    i.putExtra("tagNumber", currentCowTagNumber);
                     requireActivity().startActivity(i);
                     //getActivity().finish();
                 });
@@ -187,13 +187,13 @@ public class CowFragment extends Fragment{
         mTransferOwnershipFab.setOnClickListener(
                 view -> {
                     Intent i = new Intent(getActivity(), cowTransferOwnershipActivity.class);
-                    i.putExtra("tagNumber", binding.editTextTagNumber.getText().toString().trim());
+                    i.putExtra("tagNumber", currentCowTagNumber);
                     requireActivity().startActivity(i);
                 });
         mDeleteCowFab.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(requireActivity())
                     .setTitle("Delete Cow")
-                    .setMessage("Are you sure you want to delete " + binding.editTextTagNumber.getText().toString().trim() + "? This action is IRREVERSIBLE")
+                    .setMessage("Are you sure you want to delete " + currentCowTagNumber + "? This action is IRREVERSIBLE")
                     .setNegativeButton("No", (dialog1, which) -> {
                         //Do nothing
                     })
@@ -201,7 +201,7 @@ public class CowFragment extends Fragment{
                         deleteCow();
                         AlertDialog success_dialog = new AlertDialog.Builder(requireActivity())
                                 .setTitle("Deleted")
-                                .setMessage(binding.editTextTagNumber.getText().toString().trim() + " has been deleted")
+                                .setMessage(currentCowTagNumber + " has been deleted")
                                 .setPositiveButton("Ok", null)
                                 .create();
                         success_dialog.show();
@@ -215,13 +215,13 @@ public class CowFragment extends Fragment{
             AlertDialog dialog = new AlertDialog.Builder(requireActivity())
                     .setTitle("Change Tag Number")
                     .setView(input)
-                    .setMessage("Enter a new tag number for " + binding.editTextTagNumber.getText().toString().trim() + ":")
+                    .setMessage("Enter a new tag number for " + currentCowTagNumber + ":")
                     .setNegativeButton("Cancel", (dialog1, which) -> {
                         //Do nothing
                     })
                     .setPositiveButton("Change", (dialog1, which) -> {
                         String new_tag = input.getText().toString().trim();
-                        String old_tag = binding.editTextTagNumber.getText().toString().trim();
+                        String old_tag = currentCowTagNumber;
                         Map newTagDict = new HashMap();
                         newTagDict.put("old_tag", old_tag);
                         newTagDict.put("new_tag", new_tag);
@@ -233,7 +233,7 @@ public class CowFragment extends Fragment{
                                 response -> {
                                     AlertDialog success_dialog = new AlertDialog.Builder(requireActivity())
                                             .setTitle("Tag Number Changed")
-                                            .setMessage(binding.editTextTagNumber.getText().toString().trim() + " is now " + new_tag)
+                                            .setMessage(currentCowTagNumber + " is now " + new_tag)
                                             .setPositiveButton("Ok", null)
                                             .create();
                                     success_dialog.show();
@@ -277,7 +277,7 @@ public class CowFragment extends Fragment{
                             ntext.setPaintFlags(ntext.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
                             ntext.setOnClickListener(view -> {
                                 TextView textView = (TextView)view;
-                                binding.editTextTagNumber.setText(((TextView) view).getHint());
+                                currentCowTagNumber = ((TextView) view).getHint().toString();
                                 lookupCow();
                             });
                         }
@@ -297,7 +297,7 @@ public class CowFragment extends Fragment{
 
     public void lookupCow() {
         String endpoint = "cow";
-        String data = binding.editTextTagNumber.getText().toString().trim();
+        String data = currentCowTagNumber;
         System.out.println(data);
         new makeHTTPRequest(
                 endpoint,
@@ -341,21 +341,18 @@ public class CowFragment extends Fragment{
     }
 
     public void resetLookupText() {
-        binding.addCowButton.setText("Lookup");
         binding.textViewTagNumber.setText("Tag Number: ");
         binding.textViewOwner.setText("Owner: ");
         binding.textViewSex.setText("Sex: ");
         binding.textViewDam.setText("Dam: ");
         binding.textViewSire.setText("Sire: ");
         binding.textViewCalves.setText("Calves: ");
-        binding.editTextTagNumber.setHint("Tag Number");
-        binding.editTextTagNumber.setText("");
     }
 
     public void deleteCow() {
         new makeHTTPRequest(
                 "delete_cow",
-                binding.editTextTagNumber.getText().toString().trim(),
+                currentCowTagNumber,
                 response -> resetLookupText(),
                 error -> {
                 },
