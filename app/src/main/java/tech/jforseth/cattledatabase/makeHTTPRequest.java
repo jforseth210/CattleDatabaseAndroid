@@ -132,6 +132,8 @@ public class makeHTTPRequest {
                                 Toast.makeText(this.context, "Error: Authentication Failed", Toast.LENGTH_SHORT).show();
                             else if (error.getClass().getName().equals("com.android.volley.TimeoutError"))
                                 Toast.makeText(this.context, "Error: Connection timed out", Toast.LENGTH_SHORT).show();
+                            else if (error.getClass().getName().equals("com.android.volley.ServerError"))
+                                Toast.makeText(this.context, "Server Error: Something is probably wrong with the host computer", Toast.LENGTH_SHORT).show();
                             else
                                 Toast.makeText(this.context, "Error: Unknown error", Toast.LENGTH_SHORT).show();
                             System.out.println(error.getClass().getName());
