@@ -5,20 +5,36 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class cowInformation extends AppCompatActivity {
+    // Make sure to use the FloatingActionButton
+    // for all the FABs
+    FloatingActionButton mAddFab, mAddCowFab, mAddParentFab, mAddCalfFab, mDeleteCowFab, mTransferOwnershipFab, mChangeTagNumberFab;
+
+    // These are taken to make visible and invisible along
+    // with FABs
+    TextView mAddCowActionText, mAddParentActionText, mAddCalfActionText, mDeleteCowActionText, mTransferOwnershipActionText, mChangeTagNumberActionText;
+
+    // to check whether sub FAB buttons are visible or not.
+    Boolean isAllFabsVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +50,183 @@ public class cowInformation extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+        // Register all the FABs with their IDs
+        // This FAB button is the Parent
+        mAddFab = findViewById(R.id.add_fab);
+        // FAB button
+        mAddCowFab = findViewById(R.id.add_cow_fab);
+        mAddParentFab = findViewById(R.id.add_parent_fab);
+        mAddCalfFab = findViewById(R.id.add_calf_fab);
+        mDeleteCowFab = findViewById(R.id.delete_cow_fab);
+        mTransferOwnershipFab = findViewById(R.id.transfer_ownership_fab);
+        mChangeTagNumberFab = findViewById(R.id.change_tag_number_fab);
+
+        // Also register the action name text, of all the FABs.
+        mAddCowActionText = findViewById(R.id.add_cow_action_text);
+        mAddParentActionText = findViewById(R.id.add_parent_action_text);
+        mAddCalfActionText = findViewById(R.id.add_calf_action_text);
+        mDeleteCowActionText = findViewById(R.id.delete_cow_action_text);
+        mTransferOwnershipActionText = findViewById(R.id.transfer_ownership_action_text);
+        mChangeTagNumberActionText = findViewById(R.id.change_tag_number_action_text);
+
+        // Now set all the FABs and all the action name
+        // texts as GONE
+        mAddCowFab.setVisibility(View.GONE);
+        mAddParentFab.setVisibility(View.GONE);
+        mAddCalfFab.setVisibility(View.GONE);
+        mDeleteCowFab.setVisibility(View.GONE);
+        mTransferOwnershipFab.setVisibility(View.GONE);
+        mChangeTagNumberFab.setVisibility(View.GONE);
+        mAddCowActionText.setVisibility(View.GONE);
+        mAddParentActionText.setVisibility(View.GONE);
+        mAddCalfActionText.setVisibility(View.GONE);
+        mDeleteCowActionText.setVisibility(View.GONE);
+        mChangeTagNumberActionText.setVisibility(View.GONE);
+        mTransferOwnershipActionText.setVisibility(View.GONE);
+
+        // make the boolean variable as false, as all the
+        // action name texts and all the sub FABs are invisible
+        isAllFabsVisible = false;
+
+        // We will make all the FABs and action name texts
+        // visible only when Parent FAB button is clicked So
+        // we have to handle the Parent FAB button first, by
+        // using setOnClickListener you can see below
+        mAddFab.setOnClickListener(
+                view -> {
+                    if (!isAllFabsVisible) {
+                        // when isAllFabsVisible becomes
+                        // true make all the action name
+                        // texts and FABs VISIBLE.
+                        mAddCowFab.show();
+                        mAddParentFab.show();
+                        mAddCalfFab.show();
+                        mDeleteCowFab.show();
+                        mTransferOwnershipFab.show();
+                        mChangeTagNumberFab.show();
+                        mAddCowActionText.setVisibility(View.VISIBLE);
+                        mAddParentActionText.setVisibility(View.VISIBLE);
+                        mAddCalfActionText.setVisibility(View.VISIBLE);
+                        mDeleteCowActionText.setVisibility(View.VISIBLE);
+                        mTransferOwnershipActionText.setVisibility(View.VISIBLE);
+                        mChangeTagNumberActionText.setVisibility(View.VISIBLE);
+
+                        // make the boolean variable true as
+                        // we have set the sub FABs
+                        // visibility to GONE
+                        isAllFabsVisible = true;
+                    } else {
+
+                        // when isAllFabsVisible becomes
+                        // true make all the action name
+                        // texts and FABs GONE.
+                        mAddCowFab.hide();
+                        mAddParentFab.hide();
+                        mAddCalfFab.hide();
+                        mDeleteCowFab.hide();
+                        mTransferOwnershipFab.hide();
+                        mChangeTagNumberFab.hide();
+                        mAddCowActionText.setVisibility(View.GONE);
+                        mAddParentActionText.setVisibility(View.GONE);
+                        mAddCalfActionText.setVisibility(View.GONE);
+                        mDeleteCowActionText.setVisibility(View.GONE);
+                        mTransferOwnershipActionText.setVisibility(View.GONE);
+                        mChangeTagNumberActionText.setVisibility(View.GONE);
+
+                        // make the boolean variable false
+                        // as we have set the sub FABs
+                        // visibility to GONE
+                        isAllFabsVisible = false;
+                    }
+                });
+
+        // below is the sample action to handle add person
+        // FAB. Here it shows simple Toast msg. The Toast
+        // will be shown only when they are visible and only
+        // when user clicks on them
+        mAddParentFab.setOnClickListener(
+                view -> {
+                    Intent i = new Intent(this, cowAddParentActivity.class);
+                    i.putExtra("tagNumber", tagNumber);
+                    this.startActivity(i);
+                    //this.finish();
+                });
+
+        // below is the sample action to handle add alarm
+        // FAB. Here it shows simple Toast msg The Toast
+        // will be shown only when they are visible and only
+        // when user clicks on them
+        mAddCowFab.setOnClickListener(
+                view -> {
+                    Intent i = new Intent(this, cowAddCowActivity.class);
+                    this.startActivity(i);
+                    //this.finish();
+                });
+        mTransferOwnershipFab.setOnClickListener(
+                view -> {
+                    Intent i = new Intent(this, cowTransferOwnershipActivity.class);
+                    i.putExtra("tagNumber", tagNumber);
+                    this.startActivity(i);
+                });
+        mDeleteCowFab.setOnClickListener(v -> {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("Delete Cow")
+                    .setMessage("Are you sure you want to delete " + tagNumber + "? This action is IRREVERSIBLE")
+                    .setNegativeButton("No", (dialog1, which) -> {
+                        //Do nothing
+                    })
+                    .setPositiveButton("Yes", (dialog1, which) -> {
+                        deleteCow(tagNumber);
+                        AlertDialog success_dialog = new AlertDialog.Builder(this)
+                                .setTitle("Deleted")
+                                .setMessage(tagNumber + " has been deleted")
+                                .setPositiveButton("Ok", null)
+                                .create();
+                        success_dialog.show();
+                    })
+                    .create();
+            dialog.show();
+        });
+        mChangeTagNumberFab.setOnClickListener(v -> {
+            final EditText input = new EditText(this);
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("Change Tag Number")
+                    .setView(input)
+                    .setMessage("Enter a new tag number for " + tagNumber + ":")
+                    .setNegativeButton("Cancel", (dialog1, which) -> {
+                        //Do nothing
+                    })
+                    .setPositiveButton("Change", (dialog1, which) -> {
+                        String new_tag = input.getText().toString().trim();
+                        String old_tag = tagNumber;
+                        Map newTagDict = new HashMap();
+                        newTagDict.put("old_tag", old_tag);
+                        newTagDict.put("new_tag", new_tag);
+                        JSONObject newTagJSON = new JSONObject(newTagDict);
+
+                        new makeHTTPRequest(
+                                "change_tag",
+                                newTagJSON.toString(),
+                                chang_tag_response -> {
+                                    AlertDialog success_dialog = new AlertDialog.Builder(this)
+                                            .setTitle("Tag Number Changed")
+                                            .setMessage(tagNumber + " is now " + new_tag)
+                                            .setPositiveButton("Ok", null)
+                                            .create();
+                                    success_dialog.show();
+                                },
+                                error -> {
+                                    error.printStackTrace();
+                                },
+                                this
+                        );
+                    })
+                    .create();
+            dialog.show();
+
+        });
 
         TextView tagNumberTextView = findViewById(R.id.cowInformationTagNumberTextView);
         tagNumberTextView.setText(tagNumber);
@@ -54,7 +247,7 @@ public class cowInformation extends AppCompatActivity {
             damTextView.setPaintFlags(damTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             damTextView.setOnClickListener(damView -> {
                 final String damTagNumber = ((TextView) damView).getText().toString();
-                Toast.makeText(this, "Loading: "+ damTagNumber, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Loading: " + damTagNumber, Toast.LENGTH_SHORT).show();
                 new makeHTTPRequest(
                         "cow",
                         damTagNumber,
@@ -82,7 +275,7 @@ public class cowInformation extends AppCompatActivity {
             sireTextView.setOnClickListener(sireView -> {
                 System.out.println(((TextView) sireView).getHint().toString());
                 final String sireTagNumber = ((TextView) sireView).getText().toString();
-                Toast.makeText(this, "Loading: "+ sireTagNumber, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Loading: " + sireTagNumber, Toast.LENGTH_SHORT).show();
                 new makeHTTPRequest(
                         "cow",
                         sireTagNumber,
@@ -119,57 +312,58 @@ public class cowInformation extends AppCompatActivity {
         }
 
         for (int i = 0; i < calves.length(); i++) {
-                CardView newCardView = new CardView(this);
-                TextView newTextView = new TextView(this);
-                newCardView.addView(newTextView);
-                TextView something = new TextView(this);
-                something.setText("Justin");
-                something.setPadding(30, 95, 0, 0);
-                something.setTextColor(this.getColor(R.color.design_default_color_on_primary));
-                newCardView.addView(something);
-                LinearLayout calfList = findViewById(R.id.offspringScrollViewLinearLayout);
-                calfList.addView(newCardView);
+            CardView newCardView = new CardView(this);
+            TextView newTextView = new TextView(this);
+            newCardView.addView(newTextView);
+            TextView something = new TextView(this);
+            something.setText("Justin");
+            something.setPadding(30, 95, 0, 0);
+            something.setTextColor(this.getColor(R.color.design_default_color_on_primary));
+            newCardView.addView(something);
+            LinearLayout calfList = findViewById(R.id.offspringScrollViewLinearLayout);
+            calfList.addView(newCardView);
 
-                newCardView.setCardBackgroundColor(this.getColor(R.color.green));
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
-                params.height = 160; params.topMargin = 50;
-                newCardView.setRadius(25);
-                newTextView.setTextColor(this.getColor(R.color.design_default_color_on_primary));
-                try {
-                    newTextView.setText(calves.getString(i));
-                    newTextView.setHint(calves.getString(i));
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+            newCardView.setCardBackgroundColor(this.getColor(R.color.green));
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
+            params.height = 160;
+            params.topMargin = 50;
+            newCardView.setRadius(25);
+            newTextView.setTextColor(this.getColor(R.color.design_default_color_on_primary));
+            try {
+                newTextView.setText(calves.getString(i));
+                newTextView.setHint(calves.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-                newTextView.setTextSize(20);
-                newTextView.setPadding(30,30,0,0);
-                newTextView.setOnClickListener(view -> {
-                    System.out.println(((TextView) view).getHint().toString());
-                    final String calfTagNumber = ((TextView) view).getHint().toString();
-                    Toast.makeText(this, "Loading: "+ calfTagNumber, Toast.LENGTH_SHORT).show();
-                    new makeHTTPRequest(
-                            "cow",
-                            calfTagNumber,
-                            calf_response -> {
-                                Intent new_intent = new Intent(this, cowInformation.class);
-                                new_intent.putExtra("tagNumber", calfTagNumber);
-                                /*
-                                 * As far is I can tell, there is no way to send a JSONObject
-                                 * directly, so we send it as a string instead and parse it
-                                 * back on the other end.
-                                 */
+            newTextView.setTextSize(20);
+            newTextView.setPadding(30, 30, 0, 0);
+            newTextView.setOnClickListener(view -> {
+                System.out.println(((TextView) view).getHint().toString());
+                final String calfTagNumber = ((TextView) view).getHint().toString();
+                Toast.makeText(this, "Loading: " + calfTagNumber, Toast.LENGTH_SHORT).show();
+                new makeHTTPRequest(
+                        "cow",
+                        calfTagNumber,
+                        calf_response -> {
+                            Intent new_intent = new Intent(this, cowInformation.class);
+                            new_intent.putExtra("tagNumber", calfTagNumber);
+                            /*
+                             * As far is I can tell, there is no way to send a JSONObject
+                             * directly, so we send it as a string instead and parse it
+                             * back on the other end.
+                             */
 
-                                new_intent.putExtra("jsonData", calf_response.toString());
-                                this.startActivity(new_intent);
-                                this.finish();
+                            new_intent.putExtra("jsonData", calf_response.toString());
+                            this.startActivity(new_intent);
+                            this.finish();
 
-                            }, error -> {
+                        }, error -> {
 
-                    },
-                            this
-                    );
-                });
+                },
+                        this
+                );
+            });
         }
 
         cowInformationTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -199,4 +393,18 @@ public class cowInformation extends AppCompatActivity {
                                                     }
         );
     }
+    public void deleteCow(String tagNumber) {
+        new makeHTTPRequest(
+                "delete_cow",
+                tagNumber,
+                response -> {
+
+                },
+                error -> {
+                },
+                this
+        );
+    }
+
+
 }
