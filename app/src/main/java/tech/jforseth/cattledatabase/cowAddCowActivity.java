@@ -26,7 +26,7 @@ public class cowAddCowActivity extends AppCompatActivity{
         setContentView(R.layout.activity_cow_add_cow);
 
         Spinner sexSpinner = findViewById(R.id.sexSpinner);
-        String[] sexes = new String[]{"Bull", "Cow", "Heifer", "Steer"};
+        String[] sexes = new String[]{"Cow", "Market Heifer", "Replacement Heifer", "Free Martin", "AI-Bull", "Bull", "Steer"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sexes);
         sexSpinner.setAdapter(adapter);
 
