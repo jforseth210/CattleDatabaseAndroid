@@ -40,6 +40,7 @@ import tech.jforseth.cattledatabase.MainActivity;
 import tech.jforseth.cattledatabase.R;
 import tech.jforseth.cattledatabase.cowAddCowActivity;
 import tech.jforseth.cattledatabase.cowAddParentActivity;
+import tech.jforseth.cattledatabase.cowInformation;
 import tech.jforseth.cattledatabase.cowTransferOwnershipActivity;
 import tech.jforseth.cattledatabase.databinding.FragmentCowsBinding;
 import tech.jforseth.cattledatabase.makeHTTPRequest;
@@ -68,7 +69,6 @@ public class CowFragment extends Fragment{
         binding = FragmentCowsBinding.inflate(inflater, container, false);
 
         View root = binding.getRoot();
-        resetLookupText();
         cowViewModel.getText().observe(getViewLifecycleOwner(), s -> {
         });
 
@@ -205,7 +205,6 @@ public class CowFragment extends Fragment{
                                 .setPositiveButton("Ok", null)
                                 .create();
                         success_dialog.show();
-                        resetLookupText();
                     })
                     .create();
             dialog.show();
@@ -237,7 +236,6 @@ public class CowFragment extends Fragment{
                                             .setPositiveButton("Ok", null)
                                             .create();
                                     success_dialog.show();
-                                    resetLookupText();
                                 },
                                 error -> {
                                     error.printStackTrace();
@@ -305,7 +303,17 @@ public class CowFragment extends Fragment{
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        updateCowInformationUI(response);
+                        //updateCowInformationUI(response);
+                        Intent i = new Intent(getActivity(), cowInformation.class);
+                        i.putExtra("tagNumber", currentCowTagNumber);
+                        /*
+                         * As far is I can tell, there is no way to send a JSONObject
+                         * directly, so we send it as a string instead and parse it
+                         * back on the other end.
+                         */
+
+                        i.putExtra("jsonData", response.toString());
+                        getActivity().startActivity(i);
                     }
                 },
                 new Response.ErrorListener() {
@@ -318,42 +326,13 @@ public class CowFragment extends Fragment{
         );
     }
 
-    public void updateCowInformationUI(JSONObject object) {
-        try {
-            binding.textViewTagNumber.setText("Tag Number: " + object.getString("tag_number"));
-            binding.textViewOwner.setText("Owner: " + object.getString("owner"));
-            binding.textViewSex.setText("Sex: " + object.getString("sex"));
-            binding.textViewDam.setText("Dam: " + object.getString("dam"));
-            binding.textViewSire.setText("Sire: " + object.getString("sire"));
-            binding.textViewSire.setText("Sire: " + object.getString("sire"));
-            JSONArray calves = object.getJSONArray("calves");
-            StringBuilder calvesString = new StringBuilder();
-            for (int i = 0; i < calves.length(); i++) {
-                if (i > 0) {
-                    calvesString.append(", ");
-                }
-                calvesString.append(calves.getString(i));
-            }
-            binding.textViewCalves.setText("Calves: " + calvesString);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void resetLookupText() {
-        binding.textViewTagNumber.setText("Tag Number: ");
-        binding.textViewOwner.setText("Owner: ");
-        binding.textViewSex.setText("Sex: ");
-        binding.textViewDam.setText("Dam: ");
-        binding.textViewSire.setText("Sire: ");
-        binding.textViewCalves.setText("Calves: ");
-    }
-
     public void deleteCow() {
         new makeHTTPRequest(
                 "delete_cow",
                 currentCowTagNumber,
-                response -> resetLookupText(),
+                response -> {
+
+                },
                 error -> {
                 },
                 getActivity()

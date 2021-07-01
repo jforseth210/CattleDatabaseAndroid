@@ -4,64 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.cows.CowFragment">
+    tools:context=".ui.cows.CowFragment"><![CDATA[
 
-    <LinearLayout
-        android:id="@+id/cowLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/textView23"
-        app:layout_constraintTop_toBottomOf="@+id/textView23">
-
-        <TextView
-            android:id="@+id/textViewTagNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textViewOwner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textViewSex"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textViewDam"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textViewSire"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/textViewCalves"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="20sp" />
-
-    </LinearLayout>
     !--This will be the parent Floating Action Button-->
-    <!--After the implementation the Floating Action Button
+    ]]><!--After the implementation the Floating Action Button
          at the bottom right corner-->
     <!--After clicking the above button the following two buttons
         will pop up. So this button is considered as parent FAB-->
@@ -253,10 +199,14 @@
         android:id="@+id/cowListScrollview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/cowLayout"
-        app:layout_constraintStart_toStartOf="@+id/cowLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView24">
 
         <LinearLayout
@@ -267,24 +217,14 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/textView23"
+        android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:text="Cow Information"
+        android:text="Cows"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Cows"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintStart_toStartOf="@+id/textView23"
-        app:layout_constraintTop_toBottomOf="@+id/cowLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
