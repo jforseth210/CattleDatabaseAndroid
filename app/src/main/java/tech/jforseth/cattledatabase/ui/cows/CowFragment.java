@@ -1,42 +1,35 @@
 package tech.jforseth.cattledatabase.ui.cows;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import tech.jforseth.cattledatabase.MainActivity;
 import tech.jforseth.cattledatabase.R;
 import tech.jforseth.cattledatabase.cowAddCowActivity;
 import tech.jforseth.cattledatabase.cowAddParentActivity;
@@ -249,36 +242,61 @@ public class CowFragment extends Fragment{
         });
 
         requestQueue = Volley.newRequestQueue(requireActivity());
+        loadCows();
+        ImageView refreshButton = binding.refreshButton;
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Reloading!", Toast.LENGTH_SHORT).show();
+                loadCows();
+            }
+        });
+
+        return root;
+    }
+    public void loadCows(){
         new makeHTTPRequest(
                 "get_cow_list",
                 "",
                 response -> {
                     JSONArray cows = new JSONArray();
                     try {
-                         cows = response.getJSONArray("cows");
+                        cows = response.getJSONArray("cows");
                     } catch (JSONException e){
                         e.printStackTrace();
                     }
-                        for (int i = 0; i < cows.length(); i++) {
-                            TextView ntext = new TextView(requireActivity());
-                            binding.cowList.addView(ntext);
+                    for (int i = 0; i < cows.length(); i++) {
+                        CardView newCardView = new CardView(requireActivity());
+                        TextView newTextView = new TextView(requireActivity());
+                        newCardView.addView(newTextView);
+                        TextView something = new TextView(requireActivity());
+                        something.setText("Justin");
+                        something.setPadding(30, 95, 0, 0);
+                        something.setTextColor(getActivity().getColor(R.color.design_default_color_on_primary));
+                        newCardView.addView(something);
+                        binding.cowList.addView(newCardView);
 
-                            try {
-                                ntext.setText("• " + cows.getString(i));
-                                ntext.setHint(cows.getString(i));
-                            } catch (JSONException e){
-                                e.printStackTrace();
-                            }
-
-                            ntext.setTextSize(20);
-                            ntext.setPadding(0,25,0,0);
-                            ntext.setPaintFlags(ntext.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
-                            ntext.setOnClickListener(view -> {
-                                TextView textView = (TextView)view;
-                                currentCowTagNumber = ((TextView) view).getHint().toString();
-                                lookupCow();
-                            });
+                        newCardView.setCardBackgroundColor(getActivity().getColor(R.color.green));
+                        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
+                        params.height = 160; params.topMargin = 50;
+                        newCardView.setRadius(25);
+                        newTextView.setTextColor(getActivity().getColor(R.color.design_default_color_on_primary));
+                        try {
+                            newTextView.setText(cows.getString(i));
+                            newTextView.setHint(cows.getString(i));
+                        } catch (JSONException e){
+                            e.printStackTrace();
                         }
+
+                        newTextView.setTextSize(20);
+                        newTextView.setPadding(30,30,0,0);
+                        newTextView.setOnClickListener(view -> {
+                            TextView textView = (TextView)view;
+                            currentCowTagNumber = ((TextView) view).getHint().toString();
+                            Toast.makeText(getActivity(), "Loading: "+ currentCowTagNumber, Toast.LENGTH_SHORT).show();
+                            lookupCow();
+                        });
+                    }
 
                 },
                 error -> {
@@ -289,10 +307,7 @@ public class CowFragment extends Fragment{
                 },
                 requireActivity()
         );
-
-        return root;
     }
-
     public void lookupCow() {
         String endpoint = "cow";
         String data = currentCowTagNumber;

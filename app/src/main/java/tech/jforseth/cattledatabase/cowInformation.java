@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -51,6 +54,7 @@ public class cowInformation extends AppCompatActivity {
             damTextView.setPaintFlags(damTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             damTextView.setOnClickListener(damView -> {
                 final String damTagNumber = ((TextView) damView).getText().toString();
+                Toast.makeText(this, "Loading: "+ damTagNumber, Toast.LENGTH_SHORT).show();
                 new makeHTTPRequest(
                         "cow",
                         damTagNumber,
@@ -65,7 +69,7 @@ public class cowInformation extends AppCompatActivity {
 
                             new_intent.putExtra("jsonData", dam_response.toString());
                             this.startActivity(new_intent);
-
+                            this.finish();
                         }, error -> {
 
                 },
@@ -78,6 +82,7 @@ public class cowInformation extends AppCompatActivity {
             sireTextView.setOnClickListener(sireView -> {
                 System.out.println(((TextView) sireView).getHint().toString());
                 final String sireTagNumber = ((TextView) sireView).getText().toString();
+                Toast.makeText(this, "Loading: "+ sireTagNumber, Toast.LENGTH_SHORT).show();
                 new makeHTTPRequest(
                         "cow",
                         sireTagNumber,
@@ -92,6 +97,7 @@ public class cowInformation extends AppCompatActivity {
 
                             new_intent.putExtra("jsonData", sire_response.toString());
                             this.startActivity(new_intent);
+                            this.finish();
 
                         }, error -> {
 
@@ -113,16 +119,35 @@ public class cowInformation extends AppCompatActivity {
         }
 
         for (int i = 0; i < calves.length(); i++) {
-            try {
-                TextView calfTextView = new TextView(this);
-                calfTextView.setText("• " + calves.getString(i));
-                calfTextView.setHint(calves.getString(i));
-                calfTextView.setTextSize(20);
-                calfTextView.setPadding(0, 25, 0, 0);
-                calfTextView.setPaintFlags(calfTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                calfTextView.setOnClickListener(view -> {
+                CardView newCardView = new CardView(this);
+                TextView newTextView = new TextView(this);
+                newCardView.addView(newTextView);
+                TextView something = new TextView(this);
+                something.setText("Justin");
+                something.setPadding(30, 95, 0, 0);
+                something.setTextColor(this.getColor(R.color.design_default_color_on_primary));
+                newCardView.addView(something);
+                LinearLayout calfList = findViewById(R.id.offspringScrollViewLinearLayout);
+                calfList.addView(newCardView);
+
+                newCardView.setCardBackgroundColor(this.getColor(R.color.green));
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
+                params.height = 160; params.topMargin = 50;
+                newCardView.setRadius(25);
+                newTextView.setTextColor(this.getColor(R.color.design_default_color_on_primary));
+                try {
+                    newTextView.setText(calves.getString(i));
+                    newTextView.setHint(calves.getString(i));
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                newTextView.setTextSize(20);
+                newTextView.setPadding(30,30,0,0);
+                newTextView.setOnClickListener(view -> {
                     System.out.println(((TextView) view).getHint().toString());
                     final String calfTagNumber = ((TextView) view).getHint().toString();
+                    Toast.makeText(this, "Loading: "+ calfTagNumber, Toast.LENGTH_SHORT).show();
                     new makeHTTPRequest(
                             "cow",
                             calfTagNumber,
@@ -137,6 +162,7 @@ public class cowInformation extends AppCompatActivity {
 
                                 new_intent.putExtra("jsonData", calf_response.toString());
                                 this.startActivity(new_intent);
+                                this.finish();
 
                             }, error -> {
 
@@ -144,10 +170,6 @@ public class cowInformation extends AppCompatActivity {
                             this
                     );
                 });
-                offSpringScrollViewLinearLayout.addView(calfTextView);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
 
         cowInformationTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
