@@ -57,6 +57,7 @@ public class cowAddParentActivity extends AppCompatActivity {
     private void switchToMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         this.startActivity(i);
+        this.finish();
     }
 
     private void addParent(String newParentJSON) {

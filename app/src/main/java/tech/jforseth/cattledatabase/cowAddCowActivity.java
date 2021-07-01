@@ -68,6 +68,7 @@ public class cowAddCowActivity extends AppCompatActivity{
     private void switchToMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         this.startActivity(i);
+        this.finish();
     }
 
     private void addCow(String newCowJSON) {

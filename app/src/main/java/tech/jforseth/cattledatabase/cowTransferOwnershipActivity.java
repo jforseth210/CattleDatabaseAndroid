@@ -60,6 +60,7 @@ public class cowTransferOwnershipActivity extends AppCompatActivity {
                     transferOwnershipJSON.toString(),
                     response -> {
                         this.startActivity(new Intent(this, MainActivity.class));
+                        this.finish();
                     },
                     error -> {
                         error.printStackTrace();
