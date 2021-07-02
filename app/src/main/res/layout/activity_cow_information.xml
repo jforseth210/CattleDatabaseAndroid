@@ -182,30 +182,10 @@
     <!--Floating action button for add alarm-->
     <!--Make sure that you are constraining this
         button to the parent button-->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_cow_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toTopOf="@+id/add_fab"
-        app:layout_constraintEnd_toEndOf="@+id/add_fab"
-        app:layout_constraintStart_toStartOf="@+id/add_fab"
-        app:srcCompat="@drawable/ic_baseline_add_24" />
 
     <!--Action name text for the add alarm button-->
     <!--Make sure that you are constraining this Text to
         the add Alarm FAB button-->
-    <TextView
-        android:id="@+id/add_cow_action_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Add Cow"
-        app:layout_constraintBottom_toBottomOf="@+id/add_cow_fab"
-        app:layout_constraintEnd_toStartOf="@+id/add_cow_fab"
-        app:layout_constraintTop_toTopOf="@+id/add_cow_fab" />
 
     <!--Floating action button for add person-->
     <!--Make sure that you are constraining this
@@ -216,9 +196,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         app:fabSize="auto"
-        app:layout_constraintBottom_toTopOf="@+id/add_cow_fab"
-        app:layout_constraintEnd_toEndOf="@+id/add_cow_fab"
-        app:layout_constraintStart_toStartOf="@+id/add_cow_fab"
+        app:layout_constraintBottom_toTopOf="@+id/add_fab"
+        app:layout_constraintEnd_toEndOf="@+id/add_fab"
+        app:layout_constraintStart_toStartOf="@+id/add_fab"
         app:srcCompat="@drawable/ic_baseline_group_add_24" />
 
     <!--Action name text for the add person button-->

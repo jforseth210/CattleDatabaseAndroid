@@ -27,11 +27,11 @@ import java.util.Map;
 public class cowInformation extends AppCompatActivity {
     // Make sure to use the FloatingActionButton
     // for all the FABs
-    FloatingActionButton mAddFab, mAddCowFab, mAddParentFab, mAddCalfFab, mDeleteCowFab, mTransferOwnershipFab, mChangeTagNumberFab;
+    FloatingActionButton mAddFab, mAddParentFab, mAddCalfFab, mDeleteCowFab, mTransferOwnershipFab, mChangeTagNumberFab;
 
     // These are taken to make visible and invisible along
     // with FABs
-    TextView mAddCowActionText, mAddParentActionText, mAddCalfActionText, mDeleteCowActionText, mTransferOwnershipActionText, mChangeTagNumberActionText;
+    TextView mAddParentActionText, mAddCalfActionText, mDeleteCowActionText, mTransferOwnershipActionText, mChangeTagNumberActionText;
 
     // to check whether sub FAB buttons are visible or not.
     Boolean isAllFabsVisible;
@@ -56,7 +56,6 @@ public class cowInformation extends AppCompatActivity {
         // This FAB button is the Parent
         mAddFab = findViewById(R.id.add_fab);
         // FAB button
-        mAddCowFab = findViewById(R.id.add_cow_fab);
         mAddParentFab = findViewById(R.id.add_parent_fab);
         mAddCalfFab = findViewById(R.id.add_calf_fab);
         mDeleteCowFab = findViewById(R.id.delete_cow_fab);
@@ -64,7 +63,6 @@ public class cowInformation extends AppCompatActivity {
         mChangeTagNumberFab = findViewById(R.id.change_tag_number_fab);
 
         // Also register the action name text, of all the FABs.
-        mAddCowActionText = findViewById(R.id.add_cow_action_text);
         mAddParentActionText = findViewById(R.id.add_parent_action_text);
         mAddCalfActionText = findViewById(R.id.add_calf_action_text);
         mDeleteCowActionText = findViewById(R.id.delete_cow_action_text);
@@ -73,13 +71,11 @@ public class cowInformation extends AppCompatActivity {
 
         // Now set all the FABs and all the action name
         // texts as GONE
-        mAddCowFab.setVisibility(View.GONE);
         mAddParentFab.setVisibility(View.GONE);
         mAddCalfFab.setVisibility(View.GONE);
         mDeleteCowFab.setVisibility(View.GONE);
         mTransferOwnershipFab.setVisibility(View.GONE);
         mChangeTagNumberFab.setVisibility(View.GONE);
-        mAddCowActionText.setVisibility(View.GONE);
         mAddParentActionText.setVisibility(View.GONE);
         mAddCalfActionText.setVisibility(View.GONE);
         mDeleteCowActionText.setVisibility(View.GONE);
@@ -100,13 +96,11 @@ public class cowInformation extends AppCompatActivity {
                         // when isAllFabsVisible becomes
                         // true make all the action name
                         // texts and FABs VISIBLE.
-                        mAddCowFab.show();
                         mAddParentFab.show();
                         mAddCalfFab.show();
                         mDeleteCowFab.show();
                         mTransferOwnershipFab.show();
                         mChangeTagNumberFab.show();
-                        mAddCowActionText.setVisibility(View.VISIBLE);
                         mAddParentActionText.setVisibility(View.VISIBLE);
                         mAddCalfActionText.setVisibility(View.VISIBLE);
                         mDeleteCowActionText.setVisibility(View.VISIBLE);
@@ -122,13 +116,11 @@ public class cowInformation extends AppCompatActivity {
                         // when isAllFabsVisible becomes
                         // true make all the action name
                         // texts and FABs GONE.
-                        mAddCowFab.hide();
                         mAddParentFab.hide();
                         mAddCalfFab.hide();
                         mDeleteCowFab.hide();
                         mTransferOwnershipFab.hide();
                         mChangeTagNumberFab.hide();
-                        mAddCowActionText.setVisibility(View.GONE);
                         mAddParentActionText.setVisibility(View.GONE);
                         mAddCalfActionText.setVisibility(View.GONE);
                         mDeleteCowActionText.setVisibility(View.GONE);
@@ -158,12 +150,6 @@ public class cowInformation extends AppCompatActivity {
         // FAB. Here it shows simple Toast msg The Toast
         // will be shown only when they are visible and only
         // when user clicks on them
-        mAddCowFab.setOnClickListener(
-                view -> {
-                    Intent i = new Intent(this, cowAddCowActivity.class);
-                    this.startActivity(i);
-                    //this.finish();
-                });
         mTransferOwnershipFab.setOnClickListener(
                 view -> {
                     Intent i = new Intent(this, cowTransferOwnershipActivity.class);

@@ -152,6 +152,13 @@ public class CowFragment extends Fragment{
                 },
                 getActivity()
         );
+        FloatingActionButton mAddCowFab = binding.addCowFab;
+        mAddCowFab.setOnClickListener(
+                view -> {
+                    Intent i = new Intent(getActivity(), cowAddCowActivity.class);
+                    this.startActivity(i);
+                    //this.finish();
+                });
     }
 
     @Override
