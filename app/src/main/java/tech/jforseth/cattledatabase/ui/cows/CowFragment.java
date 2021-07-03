@@ -83,7 +83,11 @@ public class CowFragment extends Fragment {
                         TextView newTextView = new TextView(requireActivity());
                         newCardView.addView(newTextView);
                         TextView something = new TextView(requireActivity());
-                        something.setText("Justin");
+                        try {
+                            something.setText(cows.getJSONArray(i).getString(1).replace("+"," "));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         something.setPadding(30, 95, 0, 0);
                         something.setTextColor(getActivity().getColor(R.color.design_default_color_on_primary));
                         newCardView.addView(something);
@@ -96,8 +100,8 @@ public class CowFragment extends Fragment {
                         newCardView.setRadius(25);
                         newTextView.setTextColor(getActivity().getColor(R.color.design_default_color_on_primary));
                         try {
-                            newTextView.setText(cows.getString(i));
-                            newTextView.setHint(cows.getString(i));
+                            newTextView.setText(cows.getJSONArray(i).getString(0).replace("+"," "));
+                            newTextView.setHint(cows.getJSONArray(i).getString(0).replace("+"," "));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

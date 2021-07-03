@@ -308,7 +308,11 @@ public class cowInformation extends AppCompatActivity {
             TextView newTextView = new TextView(this);
             newCardView.addView(newTextView);
             TextView something = new TextView(this);
-            something.setText("Justin");
+            try {
+                something.setText(calves.getJSONArray(i).getString(1).replace("+"," "));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             something.setPadding(30, 95, 0, 0);
             something.setTextColor(this.getColor(R.color.design_default_color_on_primary));
             newCardView.addView(something);
@@ -322,8 +326,8 @@ public class cowInformation extends AppCompatActivity {
             newCardView.setRadius(25);
             newTextView.setTextColor(this.getColor(R.color.design_default_color_on_primary));
             try {
-                newTextView.setText(calves.getString(i));
-                newTextView.setHint(calves.getString(i));
+                newTextView.setText(calves.getJSONArray(i).getString(0).replace("+"," "));
+                newTextView.setHint(calves.getJSONArray(i).getString(0).replace("+"," "));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
