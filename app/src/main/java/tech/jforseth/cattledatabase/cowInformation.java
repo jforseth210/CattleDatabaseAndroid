@@ -213,6 +213,12 @@ public class cowInformation extends AppCompatActivity {
             dialog.show();
 
         });
+        mAddCalfFab.setOnClickListener(
+            view -> {
+                Intent i = new Intent(this, cowAddCalfActivity.class);
+                i.putExtra("tagNumber", tagNumber);
+                this.startActivity(i);
+        });
 
         TextView tagNumberTextView = findViewById(R.id.cowInformationTagNumberTextView);
         tagNumberTextView.setText(tagNumber);
