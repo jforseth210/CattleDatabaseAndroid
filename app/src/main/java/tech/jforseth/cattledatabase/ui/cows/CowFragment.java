@@ -1,18 +1,15 @@
 package tech.jforseth.cattledatabase.ui.cows;
 
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,22 +24,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import tech.jforseth.cattledatabase.R;
 import tech.jforseth.cattledatabase.cowAddCowActivity;
-import tech.jforseth.cattledatabase.cowAddParentActivity;
 import tech.jforseth.cattledatabase.cowInformation;
-import tech.jforseth.cattledatabase.cowTransferOwnershipActivity;
 import tech.jforseth.cattledatabase.databinding.FragmentCowsBinding;
 import tech.jforseth.cattledatabase.makeHTTPRequest;
 
-public class CowFragment extends Fragment{
+public class CowFragment extends Fragment {
 
-    private FragmentCowsBinding binding;
     RequestQueue requestQueue;
     String currentCowTagNumber;
+    private FragmentCowsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,9 +57,17 @@ public class CowFragment extends Fragment{
             }
         });
 
+        FloatingActionButton mAddCowFab = binding.addCowFab;
+        mAddCowFab.setOnClickListener(
+                view -> {
+                    Intent i = new Intent(getActivity(), cowAddCowActivity.class);
+                    this.startActivity(i);
+        });
+
         return root;
     }
-    public void loadCows(){
+
+    public void loadCows() {
         new makeHTTPRequest(
                 "get_cow_list",
                 "",
@@ -75,7 +75,7 @@ public class CowFragment extends Fragment{
                     JSONArray cows = new JSONArray();
                     try {
                         cows = response.getJSONArray("cows");
-                    } catch (JSONException e){
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     for (int i = 0; i < cows.length(); i++) {
@@ -91,22 +91,23 @@ public class CowFragment extends Fragment{
 
                         newCardView.setCardBackgroundColor(getActivity().getColor(R.color.green));
                         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
-                        params.height = 160; params.topMargin = 50;
+                        params.height = 160;
+                        params.topMargin = 50;
                         newCardView.setRadius(25);
                         newTextView.setTextColor(getActivity().getColor(R.color.design_default_color_on_primary));
                         try {
                             newTextView.setText(cows.getString(i));
                             newTextView.setHint(cows.getString(i));
-                        } catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
                         newTextView.setTextSize(20);
-                        newTextView.setPadding(30,30,0,0);
+                        newTextView.setPadding(30, 30, 0, 0);
                         newTextView.setOnClickListener(view -> {
-                            TextView textView = (TextView)view;
+                            TextView textView = (TextView) view;
                             currentCowTagNumber = ((TextView) view).getHint().toString();
-                            Toast.makeText(getActivity(), "Loading: "+ currentCowTagNumber, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Loading: " + currentCowTagNumber, Toast.LENGTH_SHORT).show();
                             lookupCow();
                         });
                     }
@@ -121,6 +122,7 @@ public class CowFragment extends Fragment{
                 requireActivity()
         );
     }
+
     public void lookupCow() {
         String endpoint = "cow";
         String data = currentCowTagNumber;
@@ -152,13 +154,6 @@ public class CowFragment extends Fragment{
                 },
                 getActivity()
         );
-        FloatingActionButton mAddCowFab = binding.addCowFab;
-        mAddCowFab.setOnClickListener(
-                view -> {
-                    Intent i = new Intent(getActivity(), cowAddCowActivity.class);
-                    this.startActivity(i);
-                    //this.finish();
-                });
     }
 
     @Override
