@@ -130,7 +130,6 @@ public class cowAddCowActivity extends AppCompatActivity{
     }
     public void updateSpinners(JSONObject object){
         try {
-            Spinner sexSpinner = findViewById(R.id.sexSpinner);
             String parentType = object.getString("parent_type");
             JSONArray parents_json = object.getJSONArray("parents");
             String[] parents = new String[parents_json.length() + 1];
