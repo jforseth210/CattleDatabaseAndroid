@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -26,9 +27,27 @@ public class cowAddCowActivity extends AppCompatActivity{
         setContentView(R.layout.activity_cow_add_cow);
 
         Spinner sexSpinner = findViewById(R.id.sexSpinner);
-        String[] sexes = new String[]{"Bull", "Bull (AI)", "Steer", "Cow", "Heifer", "Heifer (Replacement)", "Heifer (Market)", "Free-Martin"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sexes);
-        sexSpinner.setAdapter(adapter);
+        new makeHTTPRequest(
+                "get_sex_list",
+                "",
+                response -> {
+                    try {
+                        JSONArray sexes_json = response.getJSONArray("sexes");
+                        String[] sexes = new String[sexes_json.length()];
+                        for (int i = 0; i < sexes_json.length(); i++){
+                            sexes[i] = sexes_json.getString(i);
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sexes);
+                        sexSpinner.setAdapter(adapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+
+                },
+                this
+        );
 
         EditText ownerEditText = findViewById(R.id.editTextOwner);
         SharedPreferences preferences = getSharedPreferences("tech.jforseth.CattleDatabase", MODE_PRIVATE);
