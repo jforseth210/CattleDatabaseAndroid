@@ -69,7 +69,7 @@ public class CowFragment extends Fragment {
 
     public void loadCows() {
         new makeHTTPRequest(
-                "get_cow_list",
+                "cows/get_list",
                 "",
                 response -> {
                     JSONArray cows = new JSONArray();
@@ -128,7 +128,7 @@ public class CowFragment extends Fragment {
     }
 
     public void lookupCow() {
-        String endpoint = "cow";
+        String endpoint = "cows/cow";
         String data = currentCowTagNumber;
         System.out.println(data);
         new makeHTTPRequest(

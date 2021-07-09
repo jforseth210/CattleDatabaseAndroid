@@ -56,7 +56,7 @@ public class cowTransferOwnershipActivity extends AppCompatActivity {
             JSONObject transferOwnershipJSON = new JSONObject(transferOwnershipDict);
 
             new makeHTTPRequest(
-                    "transfer_ownership",
+                    "cows/transfer_ownership",
                     transferOwnershipJSON.toString(),
                     response -> {
                         this.startActivity(new Intent(this, MainActivity.class));

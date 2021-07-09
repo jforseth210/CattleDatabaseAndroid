@@ -193,7 +193,7 @@ public class cowInformation extends AppCompatActivity {
                         JSONObject newTagJSON = new JSONObject(newTagDict);
 
                         new makeHTTPRequest(
-                                "change_tag",
+                                "cows/change_tag",
                                 newTagJSON.toString(),
                                 chang_tag_response -> {
                                     AlertDialog success_dialog = new AlertDialog.Builder(this)
@@ -241,7 +241,7 @@ public class cowInformation extends AppCompatActivity {
                 final String damTagNumber = ((TextView) damView).getText().toString();
                 Toast.makeText(this, "Loading: " + damTagNumber, Toast.LENGTH_SHORT).show();
                 new makeHTTPRequest(
-                        "cow",
+                        "cows/cow",
                         damTagNumber,
                         dam_response -> {
                             Intent new_intent = new Intent(this, cowInformation.class);
@@ -269,7 +269,7 @@ public class cowInformation extends AppCompatActivity {
                 final String sireTagNumber = ((TextView) sireView).getText().toString();
                 Toast.makeText(this, "Loading: " + sireTagNumber, Toast.LENGTH_SHORT).show();
                 new makeHTTPRequest(
-                        "cow",
+                        "cows/cow",
                         sireTagNumber,
                         sire_response -> {
                             Intent new_intent = new Intent(this, cowInformation.class);
@@ -339,7 +339,7 @@ public class cowInformation extends AppCompatActivity {
                 final String calfTagNumber = ((TextView) view).getHint().toString();
                 Toast.makeText(this, "Loading: " + calfTagNumber, Toast.LENGTH_SHORT).show();
                 new makeHTTPRequest(
-                        "cow",
+                        "cows/cow",
                         calfTagNumber,
                         calf_response -> {
                             Intent new_intent = new Intent(this, cowInformation.class);
@@ -391,7 +391,7 @@ public class cowInformation extends AppCompatActivity {
     }
     public void deleteCow(String tagNumber) {
         new makeHTTPRequest(
-                "delete_cow",
+                "cows/delete",
                 tagNumber,
                 response -> {
 

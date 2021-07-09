@@ -33,7 +33,7 @@ public class cowAddCalfActivity extends AppCompatActivity {
 
         Spinner sexSpinner = findViewById(R.id.addCalfSexSpinner);
         new makeHTTPRequest(
-                "get_sex_list",
+                "cows/sex_list",
                 "",
                 response -> {
                     try {
@@ -55,7 +55,7 @@ public class cowAddCalfActivity extends AppCompatActivity {
         );
 
         new makeHTTPRequest(
-                "get_possible_parents",
+                "cows/possible_parents",
                 "sire",
                 response -> {
                     JSONArray parents_json = null;
@@ -138,7 +138,7 @@ public class cowAddCalfActivity extends AppCompatActivity {
     }
     public void addCalf(JSONObject newCalfJSON){
         new makeHTTPRequest(
-                "add_cow",
+                "cows/add",
                 newCalfJSON.toString(),
                 response -> {
                     try {

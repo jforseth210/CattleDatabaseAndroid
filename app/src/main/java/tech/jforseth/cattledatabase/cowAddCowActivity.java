@@ -28,7 +28,7 @@ public class cowAddCowActivity extends AppCompatActivity{
 
         Spinner sexSpinner = findViewById(R.id.sexSpinner);
         new makeHTTPRequest(
-                "get_sex_list",
+                "cows/sex_list",
                 "",
                 response -> {
                     try {
@@ -107,7 +107,7 @@ public class cowAddCowActivity extends AppCompatActivity{
         request.execute(url);
         */
         new makeHTTPRequest(
-                "add_cow",
+                "cows/add",
                 newCowJSON,
                 response -> {
 
@@ -136,7 +136,7 @@ public class cowAddCowActivity extends AppCompatActivity{
         request.execute(url);
     */
         new makeHTTPRequest(
-                "get_possible_parents",
+                "cows/possible_parents",
                 type,
                 response -> {
                     updateSpinners(response);

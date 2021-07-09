@@ -62,7 +62,7 @@ public class cowAddParentActivity extends AppCompatActivity {
 
     private void addParent(String newParentJSON) {
         new makeHTTPRequest(
-                "add_parent",
+                "cows/add_parent",
                 newParentJSON,
                 response -> {
 
@@ -76,7 +76,7 @@ public class cowAddParentActivity extends AppCompatActivity {
 
     private void get_possible_parents(String type) {
         new makeHTTPRequest(
-                "get_possible_parents",
+                "cows/possible_parents",
                 type,
                 response -> {
                   updateSpinners(response);
