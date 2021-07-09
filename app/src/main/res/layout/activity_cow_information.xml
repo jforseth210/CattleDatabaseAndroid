@@ -172,12 +172,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@drawable/ic_baseline_edit_24"
+        app:backgroundTint="#28a745"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginRight="16dp" />
+        app:srcCompat="@drawable/ic_baseline_edit_24" />
 
     <!--Floating action button for add alarm-->
     <!--Make sure that you are constraining this
@@ -195,6 +196,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
+        app:backgroundTint="#28a745"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/add_fab"
         app:layout_constraintEnd_toEndOf="@+id/add_fab"
@@ -223,6 +225,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
+        app:backgroundTint="#28a745"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/add_parent_fab"
         app:layout_constraintEnd_toEndOf="@+id/add_parent_fab"

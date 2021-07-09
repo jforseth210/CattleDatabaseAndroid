@@ -319,7 +319,7 @@ public class cowInformation extends AppCompatActivity {
             LinearLayout calfList = findViewById(R.id.offspringScrollViewLinearLayout);
             calfList.addView(newCardView);
 
-            newCardView.setCardBackgroundColor(this.getColor(R.color.green));
+            newCardView.setCardBackgroundColor(this.getColor(R.color.blue));
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
             params.height = 160;
             params.topMargin = 50;

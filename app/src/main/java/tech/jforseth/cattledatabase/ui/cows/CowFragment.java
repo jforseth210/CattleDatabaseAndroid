@@ -93,7 +93,7 @@ public class CowFragment extends Fragment {
                         newCardView.addView(something);
                         binding.cowList.addView(newCardView);
 
-                        newCardView.setCardBackgroundColor(getActivity().getColor(R.color.green));
+                        newCardView.setCardBackgroundColor(getActivity().getColor(R.color.blue));
                         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
                         params.height = 160;
                         params.topMargin = 50;
