@@ -36,6 +36,8 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/cowInformationSexTextView"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView26"
         app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
@@ -58,6 +60,8 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView27"
         app:layout_constraintTop_toBottomOf="@+id/textView27" />
 
@@ -76,11 +80,13 @@
         android:id="@+id/cowInformationDamTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
         android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/cowInformationSireTextView"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView28"
-        app:layout_constraintTop_toBottomOf="@+id/textView28"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
     <TextView
         android:id="@+id/textView30"
@@ -100,6 +106,8 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView30"
         app:layout_constraintTop_toBottomOf="@+id/textView30" />
 
@@ -139,7 +147,7 @@
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cowInformationTabs"
         app:layout_constraintVertical_bias="0.0">
@@ -195,7 +203,7 @@
         android:id="@+id/add_parent_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         app:backgroundTint="#28a745"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/add_fab"
@@ -224,7 +232,7 @@
         android:id="@+id/add_calf_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         app:backgroundTint="#28a745"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/add_parent_fab"
@@ -253,7 +261,7 @@
         android:id="@+id/transfer_ownership_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         app:backgroundTint="#1565C0"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/add_calf_fab"
@@ -282,7 +290,7 @@
         android:id="@+id/change_tag_number_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         app:backgroundTint="#F9A825"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/transfer_ownership_fab"
@@ -304,24 +312,51 @@
         app:layout_constraintEnd_toStartOf="@+id/change_tag_number_fab"
         app:layout_constraintTop_toTopOf="@+id/change_tag_number_fab" />
 
-    <!--Floating action button for add person-->
-    <!--Make sure that you are constraining this
-        button to the add Alarm FAB button-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/delete_cow_fab"
+        android:id="@+id/change_sex_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:backgroundTint="#C62828"
+        android:layout_marginBottom="16dp"
+        app:backgroundTint="#F9A825"
         app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/change_tag_number_fab"
         app:layout_constraintEnd_toEndOf="@+id/change_tag_number_fab"
         app:layout_constraintStart_toStartOf="@+id/change_tag_number_fab"
-        app:srcCompat="@drawable/ic_baseline_delete_24" />
+        app:srcCompat="@drawable/ic_baseline_wc_24" />
 
     <!--Action name text for the add person button-->
     <!--Make sure that you are constraining this Text
         to the add Person FAB button-->
+    <TextView
+        android:id="@+id/change_sex_action_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:text="Change Sex"
+        app:layout_constraintBottom_toBottomOf="@+id/change_sex_fab"
+        app:layout_constraintEnd_toStartOf="@+id/change_sex_fab"
+        app:layout_constraintTop_toTopOf="@+id/change_sex_fab" />
+    <!--Floating action button for add person-->
+    <!--Make sure that you are constraining this
+        button to the add Alarm FAB button-->
+
+    <!--Action name text for the add person button-->
+    <!--Make sure that you are constraining this Text
+        to the add Person FAB button-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/delete_cow_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:backgroundTint="#C62828"
+        app:fabSize="auto"
+        app:layout_constraintBottom_toTopOf="@+id/change_sex_fab"
+        app:layout_constraintEnd_toEndOf="@+id/change_tag_number_fab"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/change_tag_number_fab"
+        app:srcCompat="@drawable/ic_baseline_delete_24" />
+
     <TextView
         android:id="@+id/delete_cow_action_text"
         android:layout_width="wrap_content"
