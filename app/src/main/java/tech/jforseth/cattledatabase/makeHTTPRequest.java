@@ -136,14 +136,13 @@ public class makeHTTPRequest {
                                 Toast.makeText(this.context, "Server Error: Something is probably wrong with the host computer", Toast.LENGTH_SHORT).show();
                             else
                                 Toast.makeText(this.context, "Error: Unknown error", Toast.LENGTH_SHORT).show();
-                            System.out.println(error.getClass().getName());
-                            error.printStackTrace();
                         }
                     } else {
                         incrementFailures();
                     }
                     Response.ErrorListener errorListener = getErrorListener();
                     errorListener.onErrorResponse(error);
+                    error.printStackTrace();
                 }) {
 
             @RequiresApi(api = Build.VERSION_CODES.O)

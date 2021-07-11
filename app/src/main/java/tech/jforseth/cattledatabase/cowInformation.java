@@ -362,11 +362,18 @@ public class cowInformation extends AppCompatActivity {
         TabLayout cowInformationTabs = findViewById(R.id.cowInformationTabs);
 
         LinearLayout offSpringScrollViewLinearLayout = findViewById(R.id.offspringScrollViewLinearLayout);
-        TextView nyiTextView = findViewById(R.id.nyiTextView);
+        LinearLayout eventsScrollViewLinearLayout = findViewById(R.id.eventsScrollViewLinearLayout);
+        eventsScrollViewLinearLayout.setVisibility(View.GONE);
+        LinearLayout transactionsScrollViewLinearLayout = findViewById(R.id.transactionsScrollViewLinearLayout);
+        transactionsScrollViewLinearLayout.setVisibility(View.GONE);
 
         JSONArray calves = null;
+        JSONArray events = null;
+        JSONArray transactions = null;
         try {
             calves = parsedResponse.getJSONArray("calves");
+            events = parsedResponse.getJSONArray("events");
+            transactions = parsedResponse.getJSONArray("transactions");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -429,14 +436,79 @@ public class cowInformation extends AppCompatActivity {
                 );
             });
         }
+        for (int i = 0; i < events.length(); i++) {
+            CardView newCardView = new CardView(this);
+            TextView newTextView = new TextView(this);
+            newCardView.addView(newTextView);
+            TextView something = new TextView(this);
+            try {
+                something.setText(events.getJSONArray(i).getString(1).replace("+"," "));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            something.setPadding(30, 95, 0, 0);
+            something.setTextColor(this.getColor(R.color.design_default_color_on_primary));
+            newCardView.addView(something);
+            LinearLayout eventList = findViewById(R.id.eventsScrollViewLinearLayout);
+            eventList.addView(newCardView);
 
+            newCardView.setCardBackgroundColor(this.getColor(R.color.blue));
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
+            params.height = 160;
+            params.topMargin = 50;
+            newCardView.setRadius(25);
+            newTextView.setTextColor(this.getColor(R.color.design_default_color_on_primary));
+            try {
+                newTextView.setText(events.getJSONArray(i).getString(0).replace("+"," "));
+                newTextView.setHint(events.getJSONArray(i).getString(0).replace("+"," "));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            newTextView.setTextSize(20);
+            newTextView.setPadding(30, 30, 0, 0);
+        }
+        for (int i = 0; i < transactions.length(); i++) {
+            CardView newCardView = new CardView(this);
+            TextView newTextView = new TextView(this);
+            newCardView.addView(newTextView);
+            TextView something = new TextView(this);
+            try {
+                something.setText(transactions.getJSONArray(i).getString(1).replace("+"," "));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            something.setPadding(30, 95, 0, 0);
+            something.setTextColor(this.getColor(R.color.design_default_color_on_primary));
+            newCardView.addView(something);
+            LinearLayout transactionsList = findViewById(R.id.transactionsScrollViewLinearLayout);
+            transactionsList.addView(newCardView);
+
+            newCardView.setCardBackgroundColor(this.getColor(R.color.blue));
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) newCardView.getLayoutParams();
+            params.height = 160;
+            params.topMargin = 50;
+            newCardView.setRadius(25);
+            newTextView.setTextColor(this.getColor(R.color.design_default_color_on_primary));
+            try {
+                newTextView.setText(transactions.getJSONArray(i).getString(0).replace("+"," "));
+                newTextView.setHint(transactions.getJSONArray(i).getString(0).replace("+"," "));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            newTextView.setTextSize(20);
+            newTextView.setPadding(30, 30, 0, 0);
+        }
         cowInformationTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                                                         @Override
                                                         public void onTabSelected(TabLayout.Tab tab) {
                                                             if (tab.getText().equals("Offspring")) {
                                                                 offSpringScrollViewLinearLayout.setVisibility(View.VISIBLE);
+                                                            } else if (tab.getText().equals("Events")){
+                                                                eventsScrollViewLinearLayout.setVisibility(View.VISIBLE);
                                                             } else {
-                                                                nyiTextView.setVisibility(View.VISIBLE);
+                                                                transactionsScrollViewLinearLayout.setVisibility(View.VISIBLE);
                                                             }
                                                         }
 
@@ -444,8 +516,10 @@ public class cowInformation extends AppCompatActivity {
                                                         public void onTabUnselected(TabLayout.Tab tab) {
                                                             if (tab.getText().equals("Offspring")) {
                                                                 offSpringScrollViewLinearLayout.setVisibility(View.GONE);
+                                                            } else if (tab.getText().equals("Events")){
+                                                                eventsScrollViewLinearLayout.setVisibility(View.GONE);
                                                             } else {
-                                                                nyiTextView.setVisibility(View.GONE);
+                                                                transactionsScrollViewLinearLayout.setVisibility(View.GONE);
                                                             }
 
                                                         }
