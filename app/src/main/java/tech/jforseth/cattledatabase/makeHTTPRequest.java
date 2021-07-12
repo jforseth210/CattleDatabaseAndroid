@@ -125,6 +125,9 @@ public class makeHTTPRequest {
                 error -> {
                     // Only display a toast if both requests fail:
                     if (getFailures() >= 1) {
+                        Response.ErrorListener errorListener = getErrorListener();
+                        errorListener.onErrorResponse(error);
+                        error.printStackTrace();
                         try {
                             Toast.makeText(this.context, "Error: " + error.getMessage().substring(error.getMessage().indexOf(":") + 2), Toast.LENGTH_SHORT).show();
                         } catch (NullPointerException e){
@@ -140,9 +143,6 @@ public class makeHTTPRequest {
                     } else {
                         incrementFailures();
                     }
-                    Response.ErrorListener errorListener = getErrorListener();
-                    errorListener.onErrorResponse(error);
-                    error.printStackTrace();
                 }) {
 
             @RequiresApi(api = Build.VERSION_CODES.O)
